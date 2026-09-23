@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 /* =====================================================================
-   Testing del portfolio — sin dependencias, corre en cualquier lado.
-   Uso: node scripts/test.js
+   Testing del portfolio — corre en cualquier lado.
+   Uso: node scripts/test.js   (o: npm test)
 
    Cubre:
-   1. Sintaxis de los scripts Node (server.js, build.js, test.js)
+   1. Sintaxis de los scripts Node (server.js, test.js)
    2. Contenido del index.html (i18n, formulario, API, estructura)
    3. Paridad de claves de traducción entre es/en/pt
-   4. Build de dist/
+   4. Build de dist/ con Vite (se salta si no hay node_modules,
+      ej. en Termux sin npm install)
    5. Servidor real: health, estáticos, POST feedback, límite de
       frecuencia, GET/bandeja solo-localhost, 404 y path traversal
    ===================================================================== */
@@ -40,7 +41,7 @@ function section(title) {
 
 /* ---------- 1. sintaxis ---------- */
 section("1. Sintaxis de scripts Node");
-for (const f of ["server.js", "scripts/build.js", "scripts/test.js"]) {
+for (const f of ["server.js", "scripts/test.js"]) {
   try {
     execFileSync(process.execPath, ["--check", path.join(ROOT, f)], { stdio: "pipe" });
     ok(f + " pasa --check", true);
@@ -107,14 +108,28 @@ while ((u = ure.exec(html))) usedKeys.add(u[1]);
 const missingUsed = [...usedKeys].filter((k) => !esSet.has(k));
 ok("todas las claves usadas en HTML existen en es", missingUsed.length === 0, "faltan: " + missingUsed.join(", "));
 
-/* ---------- 4. build ---------- */
-section("4. Build dist/");
-execFileSync(process.execPath, [path.join(ROOT, "scripts/build.js")], { cwd: ROOT, stdio: "pipe" });
-ok("dist/index.html existe", fs.existsSync(path.join(ROOT, "dist/index.html")));
-ok("dist/robots.txt existe", fs.existsSync(path.join(ROOT, "dist/robots.txt")));
-const distHtml = fs.readFileSync(path.join(ROOT, "dist/index.html"), "utf8");
-ok("dist/index.html es autocontenido (sin <link> externos)", !/<link\s+[^>]*href="https?:/.test(distHtml));
-ok("dist/index.html es autocontenido (sin <script src> externos)", !/<script\s+[^>]*src="https?:/.test(distHtml));
+/* ---------- 4. build (Vite) ---------- */
+section("4. Build dist/ (Vite)");
+const hasDeps = fs.existsSync(path.join(ROOT, "node_modules", "vite"));
+if (hasDeps) {
+  try {
+    execFileSync("npm", ["run", "build"], { cwd: ROOT, stdio: "pipe" });
+    ok("vite build corre sin errores", true);
+  } catch (e) {
+    ok("vite build corre sin errores", false, String(e.stderr || e.message).slice(0, 300));
+  }
+} else {
+  console.log("  – sin node_modules: se salta el build (modo Termux)");
+}
+if (fs.existsSync(path.join(ROOT, "dist/index.html"))) {
+  ok("dist/index.html existe", true);
+  ok("dist/robots.txt existe", fs.existsSync(path.join(ROOT, "dist/robots.txt")));
+  const distHtml = fs.readFileSync(path.join(ROOT, "dist/index.html"), "utf8");
+  ok("dist/index.html mantiene el formulario", /contactForm/.test(distHtml));
+  ok("dist/index.html mantiene i18n", /data-lang="pt"/.test(distHtml));
+} else {
+  console.log("  – dist/ no existe todavía (se genera en el deploy)");
+}
 
 /* ---------- 5. servidor real ---------- */
 section("5. Servidor real (puerto efímero)");

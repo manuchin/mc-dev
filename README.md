@@ -2,11 +2,11 @@
 
 Portfolio de Manuel Candoli — 17 años, Córdoba, Argentina. Páginas web, tiendas online, sistemas a medida y automatizaciones con IA.
 
-**Trilingüe (ES/EN/PT)** con detección automática del idioma del navegador y switcher manual. **Sin dependencias**: un `index.html` autocontenido y un servidor Node puro con bandeja de mensajes.
+**Trilingüe (ES/EN/PT)** con detección automática del idioma del navegador y switcher manual. El sitio es **vanilla HTML/CSS/JS autocontenido**; el build usa Vite para el hosting.
 
 ---
 
-## Mañana (presentación en Termux)
+## En Termux (presentación / demo)
 
 En el celu, dentro de Termux:
 
@@ -17,6 +17,8 @@ cd mc-dev
 git pull                       # traer lo último (si ya lo clonaste)
 node server.js
 ```
+
+No hace falta `npm install`: el servidor y los tests corren sin dependencias.
 
 Abrí el navegador del celu en **http://localhost:4173** — listo. El sitio entero corre desde tu Android.
 
@@ -30,11 +32,9 @@ Cuando alguien deja un mensaje en el formulario ("Guardar sin WhatsApp"), aparec
 
 > El botón principal del formulario abre WhatsApp con el mensaje ya escrito. El botón secundario guarda en la bandeja local (útil si el visitante no usa WhatsApp).
 
-## Después (deploy a internet)
+## Deploy a internet
 
-El deploy está configurado con Freebuff: install sin deps + `node scripts/build.js` que genera `dist/`. Cuando quieras publicarlo, Deploy desde el panel o `freebuff-deploy start`.
-
-En el deploy público el sitio queda igual (trilingüe incluido). La bandeja `/bandeja` y la API de guardado son **solo locales**: en producción, el botón "Guardar sin WhatsApp" avisa amablemente y redirige a WhatsApp/Instagram.
+El hosting corre: `npm install` + `vite build` → `dist/`. En producción el sitio queda idéntico (trilingüe incluido). La bandeja `/bandeja` y la API de guardado son **solo locales** (Termux): en producción, el botón "Guardar sin WhatsApp" avisa amablemente y redirige a WhatsApp/Instagram.
 
 ## Testing
 
@@ -42,15 +42,16 @@ En el deploy público el sitio queda igual (trilingüe incluido). La bandeja `/b
 node scripts/test.js
 ```
 
-45 checks: sintaxis, contenido, paridad de claves i18n (es/en/pt), build autocontenido, y un servidor real efímero que prueba health, estáticos, POST con límite de frecuencia, XSS, acceso solo-localhost, 404 y path traversal.
+Checks: sintaxis, contenido, paridad de claves i18n (es/en/pt), build con Vite (se salta si no hay `node_modules`, modo Termux), y un servidor real efímero que prueba health, estáticos, POST con límite de frecuencia, XSS, acceso solo-localhost, 404 y path traversal.
 
 ## Estructura
 
 ```
-index.html        # el sitio completo: CSS y JS inline, i18n ES/EN/PT
-server.js         # servidor estático + API /api/feedback (cero dependencias)
-scripts/build.js  # genera dist/ (deploy estático)
-scripts/test.js   # suite de tests sin dependencias
+index.html          # el sitio completo: CSS y JS inline, i18n ES/EN/PT
+server.js           # servidor estático + API /api/feedback (cero dependencias)
+vite.config.mjs     # build para hosting (emite dist/)
+public/robots.txt   # copiado a dist/ por Vite
+scripts/test.js     # suite de tests sin dependencias
 data/feedback.json  # base de datos local de mensajes (git-ignored)
 ```
 

@@ -15,5 +15,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Run test suite (syntax, i18n parity, build, live server)
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run test suite (syntax, i18n parity, Vite build, live server)
         run: node scripts/test.js

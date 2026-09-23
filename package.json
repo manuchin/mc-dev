@@ -1,12 +1,20 @@
 {
   "name": "mc-dev",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
-  "description": "Portfolio trilingüe de Manuel Candoli — un HTML autocontenido + servidor con bandeja de mensajes. Sin dependencias.",
+  "description": "Portfolio trilingüe de Manuel Candoli — vanilla HTML/CSS/JS con bandeja de mensajes. Build con Vite para hosting.",
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
     "test": "node scripts/test.js",
-    "build": "node scripts/build.js"
+    "build": "vite build"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
   }
 }
