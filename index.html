@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="es" class="no-js">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Manuel Candoli — Construyo apps web que funcionan · Córdoba</title>
+<meta name="description" content="Manuel Candoli, 17 años, Córdoba. Construyo apps web funcionales usando IA como herramienta: landing pages, catálogos, apps a medida y automatizaciones. Entrega rápida, apps reales en producción." />
+<meta property="og:title" content="Manuel Candoli — Construyo apps web que funcionan" />
+<meta property="og:description" content="Landing pages, tiendas, apps a medida y automatizaciones con IA. Entrego rápido, itero según feedback." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230d0f0d'/%3E%3Ctext x='32' y='43' font-size='30' font-family='Georgia,serif' fill='%23c9f25e' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E" />
+<style>
+/* =====================================================================
+   Manuel Candoli — portfolio autocontenido · HTML+CSS+JS puro
+   "Manuscrito técnico": tinta oliva, marfil, chartreuse.
+   El portfolio es la demo: tipografía grande, layout asimétrico.
+   ===================================================================== */
+:root{
+  --bg:#0d0f0d;
+  --bg-2:#121412;
+  --panel:#171a16;
+  --line:#262b24;
+  --line-2:#39413a;
+  --ink:#e9e6da;
+  --dim:#8f9686;
+  --faint:#5b6357;
+  --acid:#c9f25e;
+  --acid-ink:#141608;
+  --serif:Georgia,"Times New Roman",Times,serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.65 var(--serif);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+::selection{background:var(--acid);color:var(--acid-ink)}
+a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(20px,4vw,56px);position:relative}
+.mono{font-family:var(--mono)}
+
+/* ---------- utilidades tipográficas ---------- */
+.tag{
+  font-family:var(--mono);font-size:11px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--dim);
+}
+.tag b{color:var(--acid);font-weight:400}
+.rule{border:0;border-top:1px solid var(--line-2);margin:0}
+.acid{color:var(--acid)}
+
+/* ---------- fondo: retícula técnica ---------- */
+.grid-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(var(--line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:160px 160px;
+  opacity:.12;
+  -webkit-mask-image:linear-gradient(#000 40%,transparent 90%);
+          mask-image:linear-gradient(#000 40%,transparent 90%);
+}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:0;z-index:30;background:rgba(13,15,13,.93);border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
+.top-in{display:flex;align-items:center;justify-content:space-between;height:62px}
+.wordmark{font-size:19px;letter-spacing:.01em;text-decoration:none}
+.wordmark i{font-style:normal;color:var(--acid)}
+.top-right{display:flex;align-items:center;gap:22px}
+.top-nav{display:flex;gap:20px}
+.top-nav a{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none}
+.top-nav a:hover{color:var(--acid)}
+.top-clock{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--faint)}
+@media(max-width:900px){.top-nav{display:none}}
+@media(max-width:560px){.top-clock{display:none}}
+
+/* margen: coordenadas */
+.margin-note{position:fixed;right:12px;top:50%;z-index:6;transform:rotate(90deg) translateX(-50%);transform-origin:right top;font-family:var(--mono);font-size:10px;letter-spacing:.32em;color:var(--faint);white-space:nowrap;pointer-events:none}
+@media(max-width:1180px){.margin-note{display:none}}
+
+/* ============================================================
+   HERO — asimétrico: 12 columnas, título ocupa 8, tabla 4
+   ============================================================ */
+.hero{padding:clamp(56px,9vh,110px) 0 0}
+.hero-cols{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:start}
+.hero-main{grid-column:1/9}
+.hero-side{grid-column:9/13;padding-top:96px}
+.hero h1{
+  font-size:clamp(52px,10.5vw,152px);
+  font-weight:400;line-height:.92;letter-spacing:-.025em;margin:16px 0 0;
+}
+.hero h1 .l2{display:block;padding-left:clamp(0px,6vw,110px);font-style:italic;color:var(--ink)}
+.hero h1 .l2 b{font-weight:400;color:var(--acid)}
+.hero-role{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);margin:26px 0 0}
+.hero-role em{font-style:normal;color:var(--acid)}
+.hero-lede{max-width:52ch;font-size:clamp(17px,2vw,21px);line-height:1.6;color:var(--dim);margin:22px 0 34px}
+.hero-lede strong{color:var(--ink);font-weight:400;font-style:italic}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:15px 26px;border:1px solid var(--line-2);border-radius:2px;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:all .2s}
+.btn:hover{border-color:var(--acid);color:var(--acid)}
+.btn-fill{background:var(--acid);border-color:var(--acid);color:var(--acid-ink)}
+.btn-fill:hover{background:#dcfa8c;border-color:#dcfa8c;color:var(--acid-ink)}
+
+/* tabla ficha técnica */
+.facts{border:1px solid var(--line-2);border-radius:3px;background:var(--bg-2);margin:0}
+.facts>div{display:flex;justify-content:space-between;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.facts>div:last-child{border-bottom:0}
+.facts dt{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin:0}
+.facts dd{margin:0;font-size:14px;text-align:right}
+.facts .ok{color:var(--acid)}
+@media(max-width:980px){
+  .hero-cols{grid-template-columns:1fr}
+  .hero-main{grid-column:1/-1}
+  .hero-side{grid-column:1/-1;padding-top:0;max-width:460px}
+}
+
+/* cifras del hero */
+.hero-stats{display:flex;flex-wrap:wrap;gap:clamp(28px,5vw,72px);margin:64px 0 0;border-top:1px solid var(--line);padding-top:30px}
+.stat b{display:block;font-size:clamp(40px,5.5vw,64px);font-weight:400;line-height:1;letter-spacing:-.02em}
+.stat b i{font-style:italic;color:var(--acid)}
+.stat span{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+
+/* ============================================================
+   SECCIONES — encabezado editorial con índice
+   ============================================================ */
+section{padding:clamp(72px,12vh,130px) 0}
+.sec-head{display:flex;align-items:baseline;gap:22px;border-bottom:1px solid var(--line-2);padding-bottom:20px;margin-bottom:clamp(40px,6vh,64px)}
+.sec-head h2{font-size:clamp(34px,5vw,60px);font-weight:400;letter-spacing:-.02em;margin:0;line-height:1}
+.sec-head h2 i{color:var(--acid);font-weight:400}
+.sec-head .idx{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.2em;white-space:nowrap}
+.sec-head .fill{flex:1}
+.sec-head .tag-end{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.24em;white-space:nowrap}
+@media(max-width:640px){.sec-head .tag-end{display:none}}
+
+/* ============================================================
+   SERVICIOS — filas escalonadas: cada fila desplazada (asimetría)
+   ============================================================ */
+.svc{list-style:none;margin:0;padding:0}
+.svc li{position:relative;border-top:1px solid var(--line)}
+.svc li:last-child{border-bottom:1px solid var(--line)}
+.svc a{
+  display:grid;grid-template-columns:110px 1fr minmax(200px,340px) 60px;
+  gap:clamp(18px,3vw,40px);align-items:baseline;
+  padding:34px 6px;text-decoration:none;transition:background .25s,padding .25s;
+}
+.svc a:hover{background:var(--panel);padding-left:26px;padding-right:26px}
+.svc .no{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.12em}
+.svc h3{font-size:clamp(28px,4.4vw,54px);font-weight:400;letter-spacing:-.02em;line-height:1;margin:0;transition:color .2s}
+.svc a:hover h3{color:var(--acid);font-style:italic}
+.svc p{margin:0;color:var(--dim);font-size:16px;line-height:1.55}
+.svc .arr{font-size:clamp(20px,3vw,30px);color:var(--faint);text-align:right;transition:transform .25s,color .25s}
+.svc a:hover .arr{transform:translate(6px,-6px);color:var(--acid)}
+/* escalonado: cada ítem sangrado más que el anterior */
+.svc li:nth-child(2) a{padding-left:clamp(18px,4vw,70px)}
+.svc li:nth-child(3) a{padding-left:clamp(36px,8vw,140px)}
+.svc li:nth-child(4) a{padding-left:clamp(54px,12vw,210px)}
+@media(max-width:820px){
+  .svc a{grid-template-columns:48px 1fr 40px;gap:14px}
+  .svc p{grid-column:2/4}
+  .svc li:nth-child(2) a,.svc li:nth-child(3) a,.svc li:nth-child(4) a{padding-left:6px}
+  .svc li:nth-child(2) a:hover,.svc li:nth-child(3) a:hover,.svc li:nth-child(4) a:hover{padding-left:26px}
+}
+
+/* frase puente */
+.bridge{
+  margin:clamp(44px,7vh,72px) auto 0;max-width:900px;text-align:center;
+  font-size:clamp(26px,4.4vw,48px);font-weight:400;line-height:1.2;letter-spacing:-.015em;
+}
+.bridge i{color:var(--acid)}
+.bridge .sub{display:block;margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--faint)}
+
+/* ============================================================
+   SOBRE MÍ — asimétrico: cita gigante izq + texto der
+   ============================================================ */
+.about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(36px,6vw,90px);align-items:start}
+.about-claim{font-size:clamp(30px,4.6vw,56px);line-height:1.12;letter-spacing:-.02em;margin:0;font-weight:400}
+.about-claim em{font-style:italic;color:var(--acid)}
+.about-text p{font-size:18px;line-height:1.75;margin:0 0 20px;color:var(--ink)}
+.about-text p.dim{color:var(--dim)}
+.about-text strong{color:var(--acid);font-weight:400;font-style:italic}
+.diff{margin:34px 0 0;border:1px solid var(--line-2);border-radius:3px;background:var(--bg-2);padding:24px 26px}
+.diff h4{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin:0 0 14px;font-weight:400}
+.diff ul{margin:0;padding:0;list-style:none}
+.diff li{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:15.5px;line-height:1.5}
+.diff li:last-child{border-bottom:0}
+.diff li::before{content:"→";color:var(--acid);flex:none}
+@media(max-width:880px){.about-grid{grid-template-columns:1fr}}
+
+/* ============================================================
+   HERRAMIENTAS — specimen tipográfico con jerarquía deliberada
+   ============================================================ */
+.tools{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(30px,5vw,80px);align-items:start}
+.tool-hero{font-size:clamp(40px,6.5vw,84px);line-height:1.02;letter-spacing:-.02em;font-weight:400;margin:0}
+.tool-hero .r2{display:block;font-style:italic;color:var(--dim)}
+.tool-hero .r3{display:block;font-style:italic;color:var(--acid)}
+.tools-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-2)}
+.tools-list li{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:15px 4px;border-bottom:1px solid var(--line)}
+.tools-list .t{font-size:19px}
+.tools-list .u{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);text-align:right}
+.tools-list .u.ok{color:var(--acid-dim,#6d7d3f)}
+@media(max-width:880px){.tools{grid-template-columns:1fr}}
+
+/* ============================================================
+   CONTACTO — tipografía monumental
+   ============================================================ */
+.contact-grid{display:grid;grid-template-columns:1fr;gap:40px}
+.giant{font-size:clamp(58px,12vw,176px);line-height:.92;letter-spacing:-.03em;font-weight:400;margin:0}
+.giant i{color:var(--acid);font-style:italic}
+.contact-rows{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-2)}
+.contact-rows li{border-bottom:1px solid var(--line)}
+.contact-rows a,.contact-rows .row-in{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:22px 4px;text-decoration:none;transition:background .2s}
+.contact-rows .k{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+.contact-rows .v{font-size:clamp(17px,2.6vw,25px);text-align:right;transition:color .2s}
+.contact-rows a:hover{background:var(--panel)}
+.contact-rows a:hover .v{color:var(--acid)}
+.contact-rows .sub-v{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:4px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:32px 0 46px}
+.foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.foot p{margin:0;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint)}
+.foot a{color:var(--dim);text-decoration:none}
+.foot a:hover{color:var(--acid)}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:50;background:var(--acid);color:var(--acid-ink);font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:12px 20px;border-radius:2px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.rv.in{opacity:1;transform:none}
+html.no-js .rv{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none;transition:none}
+  .svc a,.contact-rows a,.btn{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+<p class="margin-note" aria-hidden="true">MC · CÓRDOBA ARG · 31.4°S 64.1°O</p>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="wordmark" href="#top">Manuel Candoli<i>.</i></a>
+    <div class="top-right">
+      <nav class="top-nav" aria-label="Secciones">
+        <a href="#servicios">Servicios</a>
+        <a href="#sobre-mi">Sobre mí</a>
+        <a href="#herramientas">Herramientas</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <span class="top-clock" id="clock">--:--:-- ART</span>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="wrap hero-cols">
+      <div class="hero-main">
+        <p class="tag rv"><b>Manuel Candoli</b> — Córdoba, Argentina · <span id="yr">2026</span></p>
+        <h1 class="rv">Construyo<span class="l2">apps web <b>que funcionan.</b></span></h1>
+        <p class="hero-role rv">17 años · <em>Bachiller en Programación</em> · Disponible</p>
+        <p class="hero-lede rv">
+          No soy un programador tradicional: soy alguien que sabe <strong>qué quiere construir</strong>
+          y cómo hacerlo funcionar. Uso IA como herramienta, código vanilla como base, y entrego
+          apps reales corriendo en producción — no prototipos.
+        </p>
+        <div class="cta-row rv">
+          <a class="btn btn-fill" href="#contacto">Tenés un proyecto? Hablemos</a>
+          <a class="btn" href="#servicios">Lo que puedo hacer</a>
+        </div>
+      </div>
+
+      <dl class="facts rv">
+        <div><dt>Estado</dt><dd class="ok">Acepto proyectos</dd></div>
+        <div><dt>Edad</dt><dd>17 años</dd></div>
+        <div><dt>Base</dt><dd>Córdoba, AR · remoto</dd></div>
+        <div><dt>Infra</dt><dd>Servidor propio en Android</dd></div>
+        <div><dt>Entrega</dt><dd>Rápida · iterativa</dd></div>
+        <div><dt>Hora local</dt><dd id="clock2">--:--:-- ART</dd></div>
+      </dl>
+    </div>
+
+    <div class="wrap">
+      <div class="hero-stats rv">
+        <div class="stat"><b>4<i>+</i></b><span>Tipos de proyecto</span></div>
+        <div class="stat"><b>100<i>%</i></b><span>Vanilla · sin frameworks</span></div>
+        <div class="stat"><b>24<i>h</i></b><span>Para arrancar</span></div>
+        <div class="stat"><b>1<i></i></b><span>Solo necesito tu idea</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SERVICIOS ================= -->
+  <section id="servicios">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="idx">01</span>
+        <h2>Lo que puedo hacer<i>.</i></h2>
+        <span class="fill rule"></span>
+        <span class="tag-end">SERVICIOS</span>
+      </div>
+
+      <ul class="svc">
+        <li>
+          <a href="#contacto" data-svc="landing">
+            <span class="no">/01</span>
+            <h3>Landing pages para negocios</h3>
+            <p>Páginas de venta rápidas, con diseño que convierte y carga al instante. Tu negocio con presencia profesional.</p>
+            <span class="arr" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="#contacto" data-svc="tienda">
+            <span class="no">/02</span>
+            <h3>Catálogos y tiendas online</h3>
+            <p>Vitrinas digitales con productos, carrito y checkout. Vendé mientras dormís.</p>
+            <span class="arr" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="#contacto" data-svc="app">
+            <span class="no">/03</span>
+            <h3>Apps web a medida</h3>
+            <p>Sistemas que resuelven tu problema puntual: gestión, reservas, registros, lo que necesites.</p>
+            <span class="arr" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="#contacto" data-svc="ia">
+            <span class="no">/04</span>
+            <h3>Automatizaciones con IA</h3>
+            <p>Procesos repetitivos resueltos con inteligencia artificial: respuestas, clasificación, contenido.</p>
+            <span class="arr" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      </ul>
+
+      <p class="bridge rv">Describime lo que necesitás,<br /><i>yo lo construyo.</i><span class="sub">Respondé con dos líneas · yo me encargo del resto</span></p>
+    </div>
+  </section>
+
+  <!-- ================= SOBRE MÍ ================= -->
+  <section id="sobre-mi">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="idx">02</span>
+        <h2>Sobre mí<i>.</i></h2>
+        <span class="fill rule"></span>
+        <span class="tag-end">QUIÉN</span>
+      </div>
+
+      <div class="about-grid">
+        <p class="about-claim rv">No soy un programador tradicional:<br />sé <em>qué construir</em> y cómo hacerlo funcionar.</p>
+
+        <div class="about-text rv">
+          <p>
+            Bachiller en Programación, 17 años, Córdoba. Construyo apps web funcionales usando
+            <strong>IA como herramienta</strong> — Node.js, Express, Flask, SQLite y HTML/CSS vanilla.
+          </p>
+          <p class="dim">
+            No soy un programador tradicional: soy alguien que sabe qué quiere construir y cómo
+            hacerlo funcionar. Entrego rápido, itero según tu feedback, y uso IA para construir
+            cosas que funcionan de verdad — no prototipos: apps reales corriendo en producción.
+          </p>
+          <div class="diff">
+            <h4>El diferencial</h4>
+            <ul>
+              <li>Entrego rápido: primeras versiones en días, no meses.</li>
+              <li>Itero según feedback: cada versión está más cerca de lo que imaginaste.</li>
+              <li>Uso IA para construir cosas que funcionan de verdad — apps reales en producción.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HERRAMIENTAS ================= -->
+  <section id="herramientas">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <span class="idx">03</span>
+        <h2>Herramientas<i>.</i></h2>
+        <span class="fill rule"></span>
+        <span class="tag-end">STACK</span>
+      </div>
+
+      <div class="tools">
+        <div class="rv">
+          <p class="tool-hero">Node.js<span class="r2">Express · Flask · SQLite</span><span class="r3">Todo desde mi Android.</span></p>
+        </div>
+        <ul class="tools-list rv">
+          <li><span class="t">Node.js</span><span class="u ok">Backend</span></li>
+          <li><span class="t">Express</span><span class="u ok">APIs</span></li>
+          <li><span class="t">Flask</span><span class="u ok">Python</span></li>
+          <li><span class="t">SQLite</span><span class="u ok">Datos</span></li>
+          <li><span class="t">Termux</span><span class="u">Servidor en Android</span></li>
+          <li><span class="t">Git · GitHub</span><span class="u">Versionado</span></li>
+          <li><span class="t">Freebuff</span><span class="u">Deploy</span></li>
+          <li><span class="t">Claude AI</span><span class="u ok">Co-piloto</span></li>
+        </ul>
+      </div>
+      <p class="rv" style="max-width:62ch;color:var(--dim);margin:34px 0 0;font-size:17px">
+        Corro los proyectos desde <strong style="color:var(--acid);font-style:italic;font-weight:400">mi propio servidor en Android</strong> — Termux como entorno, Freebuff para deploy. Si funciona ahí, funciona en cualquier lado.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= CONTACTO ================= -->
+  <section id="contacto">
+    <div class="wrap contact-grid">
+      <div class="sec-head rv">
+        <span class="idx">04</span>
+        <h2>Contacto<i>.</i></h2>
+        <span class="fill rule"></span>
+        <span class="tag-end">DÓNDE</span>
+      </div>
+
+      <p class="giant rv">Tenés un proyecto <i>en mente?</i></p>
+
+      <ul class="contact-rows rv">
+        <li>
+          <a href="mailto:manuelcandoliobregon@gmail.com" id="mail-link">
+            <span class="k">Email — tap para copiar</span>
+            <span class="v">manuelcandoliobregon@gmail.com<span class="sub-v">mailto: · también abre tu cliente de correo</span></span>
+          </a>
+        </li>
+        <li>
+          <a href="https://wa.me/5493513805496" target="_blank" rel="noopener">
+            <span class="k">WhatsApp</span>
+            <span class="v">+54 9 351 380 5496</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://instagram.com/manucandoli" target="_blank" rel="noopener">
+            <span class="k">Instagram</span>
+            <span class="v">@manucandoli</span>
+          </a>
+        </li>
+        <li>
+          <div class="row-in">
+            <span class="k">Ubicación</span>
+            <span class="v">Córdoba, Argentina · remoto</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p>© <span id="yr2">2026</span> MANUEL CANDOLI · CÓRDOBA</p>
+    <p>HECHO A MANO — HTML · CSS · JS, SIN FRAMEWORKS</p>
+    <p><a href="#top">VOLVER ARRIBA ↑</a></p>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  document.documentElement.classList.remove("no-js");
+
+  var EMAIL = "manuelcandoliobregon@gmail.com";
+
+  /* reloj de Córdoba (ART) */
+  function tick(){
+    var t = new Date().toLocaleTimeString("es-AR", {
+      timeZone: "America/Argentina/Cordoba",
+      hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+    });
+    var a = document.getElementById("clock"), b = document.getElementById("clock2");
+    if (a) a.textContent = t + " ART";
+    if (b) b.textContent = t + " ART";
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* año dinámico */
+  var y = String(new Date().getFullYear());
+  var yr = document.getElementById("yr"), yr2 = document.getElementById("yr2");
+  if (yr) yr.textContent = y;
+  if (yr2) yr2.textContent = y;
+
+  /* reveals */
+  var rvs = document.querySelectorAll(".rv");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: .08, rootMargin: "0px 0px -30px 0px" });
+    rvs.forEach(function(el){ io.observe(el); });
+  } else {
+    rvs.forEach(function(el){ el.classList.add("in"); });
+  }
+
+  /* toast + copiar email (fallback para contextos sin clipboard) */
+  var toastEl = document.getElementById("toast"), tTimer = null;
+  function toast(m){
+    toastEl.textContent = m; toastEl.classList.add("on");
+    clearTimeout(tTimer);
+    tTimer = setTimeout(function(){ toastEl.classList.remove("on"); }, 2200);
+  }
+
+  var mail = document.getElementById("mail-link");
+  if (mail) {
+    mail.addEventListener("click", function(ev){
+      function ok(){ toast("Email copiado: " + EMAIL); }
+      function legacy(){
+        try {
+          var ta = document.createElement("textarea");
+          ta.value = EMAIL; ta.style.position = "fixed"; ta.style.opacity = "0";
+          document.body.appendChild(ta); ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+          ok();
+        } catch(e){ /* sin portapapeles: abre mailto */ }
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        ev.preventDefault();
+        navigator.clipboard.writeText(EMAIL).then(ok, legacy);
+      } else {
+        ev.preventDefault();
+        legacy();
+      }
+    });
+  }
+
+  /* enlace de WhatsApp */
+  var WA = "5493513805496";
+  var wa = document.querySelector('a[href^="https://wa.me/"]');
+  if (wa) wa.setAttribute("href", "https://wa.me/" + WA);
+})();
+</script>
+</body>
+</html>

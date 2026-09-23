@@ -1,2 +1,12 @@
 # mc-dev
-Portfolio personal de Manuel Candoli — desarrollador web. Proyectos reales funcionando en vivo: apps, catálogos, experiencias interactivas. Bachiller en Programación. Disponible para proyectos freelance
+
+Portfolio de Manuel Candoli — 17 años, Córdoba, Argentina. Construyo apps web funcionales usando IA como herramienta: Node.js, Express, Flask, SQLite, HTML/CSS vanilla. No soy un programador tradicional: sé qué construir y cómo hacerlo funcionar.
+
+**Servicios:** landing pages para negocios · catálogos y tiendas online · apps web a medida · automatizaciones con IA.
+
+Un solo `index.html` autocontenido (CSS y JS inline, cero dependencias externas). El portfolio en sí mismo es la demostración del trabajo: tipografía grande, layout asimétrico, paleta oscura propia.
+
+- **Producción:** el build copia `index.html` a `dist/` (`node scripts/build.js`).
+- **Termux:** abrí `index.html` directo en el navegador, o `node server.js` y entrá a `localhost:4173`.
+
+Contacto: manuelcandoliobregon@gmail.com · +54 9 351 380 5496 · @manucandoli
