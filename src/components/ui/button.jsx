@@ -1,17 +1,20 @@
 import * as React from "react";
 import { cn } from "../../lib/utils";
 
+/* Estilo Cruip: botón de texto normal (no uppercase), font-medium,
+   primario con gradiente sky que se estira al hover + flecha móvil. */
 const variants = {
   default:
-    "bg-primary text-primary-foreground border-primary shadow-[0_0_24px_rgba(56,189,248,0.25)] hover:shadow-[0_0_34px_rgba(56,189,248,0.4)]",
+    "border-transparent bg-gradient-to-t from-sky-500 to-sky-400 bg-[length:100%_100%] bg-bottom text-primary-foreground shadow-lg shadow-sky-500/25 transition-[background-size,box-shadow] hover:bg-[length:100%_150%] hover:shadow-sky-400/40",
+  secondary: "border-transparent bg-white text-gray-900 shadow-sm hover:bg-gray-200",
   outline:
-    "bg-transparent text-foreground border-secondary hover:border-primary hover:text-primary hover:shadow-[0_0_24px_rgba(56,189,248,0.15)]",
+    "bg-transparent text-foreground border-secondary hover:border-primary hover:text-primary hover:bg-primary/5",
   ghost: "border-transparent bg-transparent text-muted-foreground hover:text-primary",
 };
 
 const sizes = {
-  default: "px-6 py-3 text-xs tracking-[0.14em]",
-  sm: "px-4 py-2 text-[11px] tracking-[0.1em]",
+  default: "px-5 py-3 text-sm tracking-normal",
+  sm: "px-4 py-2 text-xs tracking-normal",
   icon: "h-9 w-9 p-0",
 };
 
@@ -21,7 +24,7 @@ const Button = React.forwardRef(({ className, variant = "default", size = "defau
     <Comp
       ref={ref}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-full border font-medium uppercase transition-all duration-200",
+        "group inline-flex items-center justify-center gap-1.5 rounded-lg border font-medium transition-all duration-200",
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
         "disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
         variants[variant] || variants.default,
