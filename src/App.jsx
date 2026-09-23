@@ -3,6 +3,7 @@ import { ToastProvider } from "./components/ToastProvider.jsx";
 import Header from "./sections/Header.jsx";
 import Hero from "./sections/Hero.jsx";
 import Services from "./sections/Services.jsx";
+import Projects from "./sections/Projects.jsx";
 import About from "./sections/About.jsx";
 import Tools from "./sections/Tools.jsx";
 import Contact from "./sections/Contact.jsx";
@@ -24,6 +25,7 @@ export default function App() {
         <main id="top" className="relative">
           <Hero />
           <Services />
+          <Projects />
           <About />
           <Tools />
           <Contact />

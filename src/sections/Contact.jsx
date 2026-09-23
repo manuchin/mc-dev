@@ -23,7 +23,9 @@ export default function Contact() {
   function sendWhatsApp(e) {
     e.preventDefault();
     if (!msg.trim()) return;
-    const text = name.trim() ? "Hola Manuel, soy " + name.trim() + ". " + msg.trim() : "Hola Manuel. " + msg.trim();
+    const text = name.trim()
+      ? "Hola Manuel, soy " + name.trim() + ". " + msg.trim()
+      : "Hola Manuel. " + msg.trim();
     window.open("https://wa.me/" + WA + "?text=" + encodeURIComponent(text), "_blank", "noopener");
   }
 
@@ -36,7 +38,12 @@ export default function Contact() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), message: msg.trim(), lang }),
       });
-      if (!res.ok) throw new Error("bad status");
+      /* Validamos que la respuesta sea JSON del server, no un HTML de fallback:
+         en un hosting estático sin API esto cae al toast de fallo honesto. */
+      const ct = res.headers.get("content-type") || "";
+      if (!res.ok || ct.indexOf("application/json") === -1) throw new Error("no api");
+      const data = await res.json();
+      if (!data || data.ok !== true) throw new Error("bad payload");
       toast(t("toast.saved"));
       setMsg("");
     } catch (err) {
@@ -78,8 +85,8 @@ export default function Contact() {
     <section id="contacto" className="py-20 sm:py-28 lg:py-32">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8 lg:px-14">
         <div ref={head} className="rv mb-12 flex items-baseline gap-5 border-b border-border-strong pb-5">
-          <span className="font-mono text-xs tracking-[0.2em] text-faint">04</span>
-          <h2 className="m-0 font-serif text-[clamp(34px,5vw,60px)] font-normal leading-none tracking-[-0.02em]">
+          <span className="font-mono text-xs tracking-[0.2em] text-faint">05</span>
+          <h2 className="m-0 font-sans text-[clamp(34px,5vw,60px)] font-semibold leading-none tracking-[-0.02em]">
             {t("s4.t")}
             <i className="text-primary">.</i>
           </h2>
@@ -87,8 +94,11 @@ export default function Contact() {
           <span className="hidden font-mono text-[11px] tracking-[0.24em] text-faint sm:inline">{t("s4.tag")}</span>
         </div>
 
-        <p ref={giant} className="rv m-0 font-serif text-[clamp(58px,12vw,176px)] font-normal leading-[0.92] tracking-[-0.03em]">
-          {t("c.g1")} <i className="italic text-primary">{t("c.g2")}</i>
+        <p
+          ref={giant}
+          className="rv m-0 font-sans text-[clamp(52px,11vw,160px)] font-semibold leading-[0.95] tracking-[-0.03em]"
+        >
+          {t("c.g1")} <i className="text-primary">{t("c.g2")}</i>
         </p>
         <p className="mt-6 max-w-[44ch] text-lg leading-relaxed text-muted-foreground">{t("c.note")}</p>
 
@@ -103,7 +113,7 @@ export default function Contact() {
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="rounded-sm border border-border-strong bg-card-elevated px-4 py-3.5 font-serif text-base text-foreground outline-none transition-colors focus:border-primary"
+            className="rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base text-foreground outline-none transition-all focus:border-primary focus:shadow-[0_0_20px_rgba(56,189,248,0.12)]"
           />
           <label htmlFor="cf-msg" className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
             {t("form.msg")}
@@ -116,7 +126,7 @@ export default function Contact() {
             placeholder={t("form.msgPh")}
             value={msg}
             onChange={(e) => setMsg(e.target.value)}
-            className="resize-y rounded-sm border border-border-strong bg-card-elevated px-4 py-3.5 font-serif text-base text-foreground outline-none transition-colors placeholder:text-faint focus:border-primary"
+            className="resize-y rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base text-foreground outline-none transition-all placeholder:text-faint focus:border-primary focus:shadow-[0_0_20px_rgba(56,189,248,0.12)]"
           />
           <div className="mt-1 flex flex-wrap gap-3">
             <Button type="submit">{t("form.send")}</Button>
@@ -135,7 +145,7 @@ export default function Contact() {
               className="flex items-center justify-between gap-5 px-1 py-[22px] no-underline transition-colors hover:bg-card"
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-faint">{t("row.email")}</span>
-              <span className="text-right font-serif text-[clamp(17px,2.6vw,25px)] transition-colors hover:text-primary">
+              <span className="text-right text-[clamp(17px,2.6vw,25px)] transition-colors hover:text-primary">
                 {EMAIL}
               </span>
             </a>
@@ -148,7 +158,7 @@ export default function Contact() {
               className="flex items-center justify-between gap-5 px-1 py-[22px] no-underline transition-colors hover:bg-card"
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-faint">{t("row.wa")}</span>
-              <span className="text-right font-serif text-[clamp(17px,2.6vw,25px)] transition-colors hover:text-primary">
+              <span className="text-right text-[clamp(17px,2.6vw,25px)] transition-colors hover:text-primary">
                 +54 9 351 380 5496
               </span>
             </a>
@@ -161,7 +171,7 @@ export default function Contact() {
               className="flex items-center justify-between gap-5 px-1 py-[22px] no-underline transition-colors hover:bg-card"
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-faint">{t("row.ig")}</span>
-              <span className="text-right font-serif text-[clamp(17px,2.6vw,25px)] transition-colors hover:text-primary">
+              <span className="text-right text-[clamp(17px,2.6vw,25px)] transition-colors hover:text-primary">
                 @manucandoli
               </span>
             </a>
@@ -169,7 +179,7 @@ export default function Contact() {
           <li className="border-b border-border">
             <div className="flex items-center justify-between gap-5 px-1 py-[22px]">
               <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-faint">{t("row.loc")}</span>
-              <span className="text-right font-serif text-[clamp(17px,2.6vw,25px)]">{t("row.locv")}</span>
+              <span className="text-right text-[clamp(17px,2.6vw,25px)]">{t("row.locv")}</span>
             </div>
           </li>
         </ul>

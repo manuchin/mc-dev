@@ -13,8 +13,8 @@ export default function About() {
     <section id="sobre-mi" className="py-20 sm:py-28 lg:py-32">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8 lg:px-14">
         <div ref={head} className="rv mb-12 flex items-baseline gap-5 border-b border-border-strong pb-5">
-          <span className="font-mono text-xs tracking-[0.2em] text-faint">02</span>
-          <h2 className="m-0 font-serif text-[clamp(34px,5vw,60px)] font-normal leading-none tracking-[-0.02em]">
+          <span className="font-mono text-xs tracking-[0.2em] text-faint">03</span>
+          <h2 className="m-0 font-sans text-[clamp(34px,5vw,60px)] font-semibold leading-none tracking-[-0.02em]">
             {t("s2.t")}
             <i className="text-primary">.</i>
           </h2>
@@ -23,7 +23,10 @@ export default function About() {
         </div>
 
         <div className="grid items-start gap-9 sm:gap-[clamp(36px,6vw,90px)] lg:grid-cols-[1.1fr_1fr]">
-          <p ref={claim} className="rv m-0 font-serif text-[clamp(30px,4.6vw,56px)] font-normal leading-[1.12] tracking-[-0.02em]">
+          <p
+            ref={claim}
+            className="rv m-0 font-sans text-[clamp(30px,4.6vw,56px)] font-semibold leading-[1.12] tracking-[-0.02em]"
+          >
             {t("ab.c1")}
             <br />
             {t("ab.c2")} <em className="italic text-primary">{t("ab.c3")}</em> {t("ab.c4")}

@@ -115,14 +115,14 @@ function inboxHtml(list) {
     .map((m) => {
       const when = new Date(m.ts).toLocaleString("es-AR");
       const name = m.name ? "<b>" + escapeHtml(m.name) + "</b> — " : "";
-      const lang = m.lang ? ' <span style="color:#5b6357">[' + escapeHtml(m.lang) + "]</span>" : "";
+      const lang = m.lang ? ' <span style="color:#565e66">[' + escapeHtml(m.lang) + "]</span>" : "";
       const page = m.page && !/localhost/.test(m.page)
-        ? ' <span style="color:#5b6357">(desde ' + escapeHtml(m.page) + ")</span>" : "";
+        ? ' <span style="color:#565e66">(desde ' + escapeHtml(m.page) + ")</span>" : "";
       return (
         '<li style="margin:0 0 18px">' +
-        '<div style="font:11px monospace;color:#8f9686;letter-spacing:.08em">' +
+        '<div style="font:11px monospace;color:#565e66;letter-spacing:.08em">' +
         escapeHtml(when) + lang + page + "</div>" +
-        '<div style="font:17px Georgia,serif;color:#e9e6da;margin:4px 0 0">' + name +
+        '<div style="font:17px Arial,sans-serif;color:#e8eaed;margin:4px 0 0">' + name +
         escapeHtml(m.message) + "</div></li>"
       );
     })
@@ -132,13 +132,13 @@ function inboxHtml(list) {
   return "<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\">" +
     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" +
     "<title>Bandeja — Manuel Candoli</title></head>" +
-    "<body style=\"margin:0;background:#0d0f0d;padding:40px 24px\">" +
+    "<body style=\"margin:0;background:#0a0a0a;padding:40px 24px\">" +
     "<div style=\"max-width:720px;margin:0 auto\">" +
-    "<h1 style=\"font:400 34px Georgia,serif;color:#c9f25e;margin:0 0 6px\">Bandeja de mensajes</h1>" +
-    "<p style=\"font:12px monospace;color:#5b6357;letter-spacing:.14em;margin:0 0 30px\">" +
+    "<h1 style=\"font:600 34px Arial,sans-serif;color:#38bdf8;margin:0 0 6px\">Bandeja de mensajes</h1>" +
+    "<p style=\"font:12px monospace;color:#565e66;letter-spacing:.14em;margin:0 0 30px\">" +
     list.length + " MENSAJE(S) · SOLO VOS VES ESTO (ES LOCAL)</p>" +
     "<ul style=\"list-style:none;padding:0;margin:0\">" +
-    (rows || '<li style="color:#8f9686;font:16px Georgia,serif">Todavía no hay mensajes.</li>') +
+    (rows || '<li style="color:#8a929a;font:16px Arial,sans-serif">Todavía no hay mensajes.</li>') +
     "</ul></div></body></html>";
 }
 
