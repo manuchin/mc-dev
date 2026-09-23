@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,16 +15,5 @@ jobs:
         with:
           node-version: 20
 
-      - name: Syntax check (no dependencies)
-        run: |
-          node --check server.js
-          node --check scripts/build.js
-
-      - name: Build dist/
-        run: node scripts/build.js
-
-      - name: Verify dist output
-        run: |
-          test -f dist/index.html
-          test -f dist/robots.txt
-          grep -q "Manuel Candoli" dist/index.html
+      - name: Run test suite (syntax, i18n parity, build, live server)
+        run: node scripts/test.js

@@ -1,11 +1,12 @@
 {
   "name": "mc-dev",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Portfolio personal de Manuel Candoli — un solo HTML autocontenido. Para Termux: abrí index.html directo en el navegador.",
+  "description": "Portfolio trilingüe de Manuel Candoli — un HTML autocontenido + servidor con bandeja de mensajes. Sin dependencias.",
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
+    "test": "node scripts/test.js",
     "build": "node scripts/build.js"
   }
 }

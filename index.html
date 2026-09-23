@@ -3,17 +3,19 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Manuel Candoli — Construyo apps web que funcionan · Córdoba</title>
-<meta name="description" content="Manuel Candoli, 17 años, Córdoba. Construyo apps web funcionales usando IA como herramienta: landing pages, catálogos, apps a medida y automatizaciones. Entrega rápida, apps reales en producción." />
-<meta property="og:title" content="Manuel Candoli — Construyo apps web que funcionan" />
-<meta property="og:description" content="Landing pages, tiendas, apps a medida y automatizaciones con IA. Entrego rápido, itero según feedback." />
+<meta name="theme-color" content="#0d0f0d" />
+<meta name="color-scheme" content="dark" />
+<title>Manuel Candoli — Construyo páginas web que funcionan · Córdoba</title>
+<meta name="description" content="Manuel Candoli hace páginas web, tiendas online y sistemas a medida para tu negocio. Rápido, claro y funcionando en internet. Córdoba, Argentina." />
+<meta property="og:title" content="Manuel Candoli — Páginas web que funcionan" />
+<meta property="og:description" content="Páginas web, tiendas online, sistemas a medida y automatizaciones con IA. Contás qué necesitás, yo lo construyo." />
 <meta property="og:type" content="website" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230d0f0d'/%3E%3Ctext x='32' y='43' font-size='30' font-family='Georgia,serif' fill='%23c9f25e' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E" />
 <style>
 /* =====================================================================
    Manuel Candoli — portfolio autocontenido · HTML+CSS+JS puro
    "Manuscrito técnico": tinta oliva, marfil, chartreuse.
-   El portfolio es la demo: tipografía grande, layout asimétrico.
+   Trilingüe ES/EN/PT + bandeja de mensajes (Termux).
    ===================================================================== */
 :root{
   --bg:#0d0f0d;
@@ -26,6 +28,7 @@
   --faint:#5b6357;
   --acid:#c9f25e;
   --acid-ink:#141608;
+  --acid-dim:#7a8c4a;
   --serif:Georgia,"Times New Roman",Times,serif;
   --mono:ui-monospace,"SF Mono","Cascadia Mono",Menlo,Consolas,"Liberation Mono",monospace;
 }
@@ -64,14 +67,18 @@ a{color:inherit}
 
 /* ---------- header ---------- */
 .top{position:sticky;top:0;z-index:30;background:rgba(13,15,13,.93);border-bottom:1px solid var(--line);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)}
-.top-in{display:flex;align-items:center;justify-content:space-between;height:62px}
-.wordmark{font-size:19px;letter-spacing:.01em;text-decoration:none}
+.top-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:14px}
+.wordmark{font-size:19px;letter-spacing:.01em;text-decoration:none;white-space:nowrap}
 .wordmark i{font-style:normal;color:var(--acid)}
 .top-right{display:flex;align-items:center;gap:22px}
 .top-nav{display:flex;gap:20px}
 .top-nav a{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-decoration:none}
 .top-nav a:hover{color:var(--acid)}
 .top-clock{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--faint)}
+.lang{display:flex;border:1px solid var(--line);border-radius:2px;padding:2px;flex:none}
+.lang button{background:none;border:0;color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:.08em;padding:6px 9px;cursor:pointer;border-radius:1px;transition:color .2s,background .2s}
+.lang button:hover{color:var(--acid)}
+.lang button.on{background:var(--acid);color:var(--acid-ink)}
 @media(max-width:900px){.top-nav{display:none}}
 @media(max-width:560px){.top-clock{display:none}}
 
@@ -80,46 +87,24 @@ a{color:inherit}
 @media(max-width:1180px){.margin-note{display:none}}
 
 /* ============================================================
-   HERO — asimétrico: 12 columnas, título ocupa 8, tabla 4
+   HERO — limpio: texto grande + dos botones
    ============================================================ */
 .hero{padding:clamp(56px,9vh,110px) 0 0}
-.hero-cols{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:start}
-.hero-main{grid-column:1/9}
-.hero-side{grid-column:9/13;padding-top:96px}
 .hero h1{
   font-size:clamp(52px,10.5vw,152px);
   font-weight:400;line-height:.92;letter-spacing:-.025em;margin:16px 0 0;
 }
-.hero h1 .l2{display:block;padding-left:clamp(0px,6vw,110px);font-style:italic;color:var(--ink)}
+.hero h1 .l2{display:block;padding-left:clamp(0px,8vw,150px);font-style:italic;color:var(--ink)}
 .hero h1 .l2 b{font-weight:400;color:var(--acid)}
 .hero-role{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim);margin:26px 0 0}
 .hero-role em{font-style:normal;color:var(--acid)}
 .hero-lede{max-width:52ch;font-size:clamp(17px,2vw,21px);line-height:1.6;color:var(--dim);margin:22px 0 34px}
-.hero-lede strong{color:var(--ink);font-weight:400;font-style:italic}
 .cta-row{display:flex;flex-wrap:wrap;gap:12px}
-.btn{display:inline-block;padding:15px 26px;border:1px solid var(--line-2);border-radius:2px;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:all .2s}
+.btn{display:inline-block;padding:15px 26px;border:1px solid var(--line-2);border-radius:2px;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:all .2s;cursor:pointer;background:none}
 .btn:hover{border-color:var(--acid);color:var(--acid)}
 .btn-fill{background:var(--acid);border-color:var(--acid);color:var(--acid-ink)}
 .btn-fill:hover{background:#dcfa8c;border-color:#dcfa8c;color:var(--acid-ink)}
-
-/* tabla ficha técnica */
-.facts{border:1px solid var(--line-2);border-radius:3px;background:var(--bg-2);margin:0}
-.facts>div{display:flex;justify-content:space-between;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line)}
-.facts>div:last-child{border-bottom:0}
-.facts dt{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin:0}
-.facts dd{margin:0;font-size:14px;text-align:right}
-.facts .ok{color:var(--acid)}
-@media(max-width:980px){
-  .hero-cols{grid-template-columns:1fr}
-  .hero-main{grid-column:1/-1}
-  .hero-side{grid-column:1/-1;padding-top:0;max-width:460px}
-}
-
-/* cifras del hero */
-.hero-stats{display:flex;flex-wrap:wrap;gap:clamp(28px,5vw,72px);margin:64px 0 0;border-top:1px solid var(--line);padding-top:30px}
-.stat b{display:block;font-size:clamp(40px,5.5vw,64px);font-weight:400;line-height:1;letter-spacing:-.02em}
-.stat b i{font-style:italic;color:var(--acid)}
-.stat span{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+button.btn{font-size:12px}
 
 /* ============================================================
    SECCIONES — encabezado editorial con índice
@@ -178,7 +163,6 @@ section{padding:clamp(72px,12vh,130px) 0}
 .about-claim em{font-style:italic;color:var(--acid)}
 .about-text p{font-size:18px;line-height:1.75;margin:0 0 20px;color:var(--ink)}
 .about-text p.dim{color:var(--dim)}
-.about-text strong{color:var(--acid);font-weight:400;font-style:italic}
 .diff{margin:34px 0 0;border:1px solid var(--line-2);border-radius:3px;background:var(--bg-2);padding:24px 26px}
 .diff h4{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin:0 0 14px;font-weight:400}
 .diff ul{margin:0;padding:0;list-style:none}
@@ -198,15 +182,25 @@ section{padding:clamp(72px,12vh,130px) 0}
 .tools-list li{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:15px 4px;border-bottom:1px solid var(--line)}
 .tools-list .t{font-size:19px}
 .tools-list .u{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);text-align:right}
-.tools-list .u.ok{color:var(--acid-dim,#6d7d3f)}
+.tools-list .u.ok{color:var(--acid-dim)}
 @media(max-width:880px){.tools{grid-template-columns:1fr}}
 
 /* ============================================================
-   CONTACTO — tipografía monumental
+   CONTACTO — tipografía monumental + formulario
    ============================================================ */
-.contact-grid{display:grid;grid-template-columns:1fr;gap:40px}
 .giant{font-size:clamp(58px,12vw,176px);line-height:.92;letter-spacing:-.03em;font-weight:400;margin:0}
 .giant i{color:var(--acid);font-style:italic}
+.contact-note{max-width:44ch;color:var(--dim);font-size:18px;line-height:1.6;margin:26px 0 0}
+.contact-form{max-width:640px;display:grid;gap:12px;margin:38px 0 54px}
+.contact-form label{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.contact-form input,.contact-form textarea{
+  background:var(--bg-2);border:1px solid var(--line-2);border-radius:2px;
+  color:var(--ink);font:16px/1.5 var(--serif);padding:14px 16px;resize:vertical;
+}
+.contact-form input:focus,.contact-form textarea:focus{outline:none;border-color:var(--acid)}
+.contact-form input::placeholder,.contact-form textarea::placeholder{color:var(--faint)}
+.form-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+.form-hint{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--faint);margin:2px 0 0}
 .contact-rows{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-2)}
 .contact-rows li{border-bottom:1px solid var(--line)}
 .contact-rows a,.contact-rows .row-in{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:22px 4px;text-decoration:none;transition:background .2s}
@@ -214,7 +208,6 @@ section{padding:clamp(72px,12vh,130px) 0}
 .contact-rows .v{font-size:clamp(17px,2.6vw,25px);text-align:right;transition:color .2s}
 .contact-rows a:hover{background:var(--panel)}
 .contact-rows a:hover .v{color:var(--acid)}
-.contact-rows .sub-v{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:4px}
 
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line);padding:32px 0 46px}
@@ -224,7 +217,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 46px}
 .foot a:hover{color:var(--acid)}
 
 /* ---------- toast ---------- */
-#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:50;background:var(--acid);color:var(--acid-ink);font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:12px 20px;border-radius:2px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:50;background:var(--acid);color:var(--acid-ink);font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:12px 20px;border-radius:2px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* ---------- reveal ---------- */
@@ -248,12 +241,17 @@ html.no-js .rv{opacity:1;transform:none}
     <a class="wordmark" href="#top">Manuel Candoli<i>.</i></a>
     <div class="top-right">
       <nav class="top-nav" aria-label="Secciones">
-        <a href="#servicios">Servicios</a>
-        <a href="#sobre-mi">Sobre mí</a>
-        <a href="#herramientas">Herramientas</a>
-        <a href="#contacto">Contacto</a>
+        <a href="#servicios" data-i18n="nav.s">Servicios</a>
+        <a href="#sobre-mi" data-i18n="nav.a">Sobre mí</a>
+        <a href="#herramientas" data-i18n="nav.h">Herramientas</a>
+        <a href="#contacto" data-i18n="nav.c">Contacto</a>
       </nav>
-      <span class="top-clock" id="clock">--:--:-- ART</span>
+      <span class="top-clock" id="clock">--:--:--</span>
+      <div class="lang" role="group" aria-label="Idioma / Language / Idioma">
+        <button type="button" data-lang="es" class="on">ES</button>
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="pt">PT</button>
+      </div>
     </div>
   </div>
 </header>
@@ -261,38 +259,18 @@ html.no-js .rv{opacity:1;transform:none}
 <main id="top">
   <!-- ================= HERO ================= -->
   <section class="hero">
-    <div class="wrap hero-cols">
-      <div class="hero-main">
-        <p class="tag rv"><b>Manuel Candoli</b> — Córdoba, Argentina · <span id="yr">2026</span></p>
-        <h1 class="rv">Construyo<span class="l2">apps web <b>que funcionan.</b></span></h1>
-        <p class="hero-role rv">17 años · <em>Bachiller en Programación</em> · Disponible</p>
-        <p class="hero-lede rv">
-          No soy un programador tradicional: soy alguien que sabe <strong>qué quiere construir</strong>
-          y cómo hacerlo funcionar. Uso IA como herramienta, código vanilla como base, y entrego
-          apps reales corriendo en producción — no prototipos.
-        </p>
-        <div class="cta-row rv">
-          <a class="btn btn-fill" href="#contacto">Tenés un proyecto? Hablemos</a>
-          <a class="btn" href="#servicios">Lo que puedo hacer</a>
-        </div>
-      </div>
-
-      <dl class="facts rv">
-        <div><dt>Estado</dt><dd class="ok">Acepto proyectos</dd></div>
-        <div><dt>Edad</dt><dd>17 años</dd></div>
-        <div><dt>Base</dt><dd>Córdoba, AR · remoto</dd></div>
-        <div><dt>Infra</dt><dd>Servidor propio en Android</dd></div>
-        <div><dt>Entrega</dt><dd>Rápida · iterativa</dd></div>
-        <div><dt>Hora local</dt><dd id="clock2">--:--:-- ART</dd></div>
-      </dl>
-    </div>
-
     <div class="wrap">
-      <div class="hero-stats rv">
-        <div class="stat"><b>4<i>+</i></b><span>Tipos de proyecto</span></div>
-        <div class="stat"><b>100<i>%</i></b><span>Vanilla · sin frameworks</span></div>
-        <div class="stat"><b>24<i>h</i></b><span>Para arrancar</span></div>
-        <div class="stat"><b>1<i></i></b><span>Solo necesito tu idea</span></div>
+      <p class="tag rv"><b>Manuel Candoli</b><span data-i18n="hero.kicker"> — Córdoba, Argentina · </span><span id="yr">2026</span></p>
+      <h1 class="rv"><span data-i18n="hero.h1a">Construyo</span><span class="l2"><span data-i18n="hero.h1b">páginas web</span> <b data-i18n="hero.h1c">que funcionan.</b></span></h1>
+      <p class="hero-role rv" data-i18n="hero.role">17 años · Bachiller en Programación · Disponible</p>
+      <p class="hero-lede rv" data-i18n="hero.lede">
+        Hago páginas, tiendas y sistemas web que quedan funcionando en internet.
+        Rápidos, a tu medida y con buen diseño: vos contás qué necesitás, yo me
+        ocupo de todo lo demás.
+      </p>
+      <div class="cta-row rv">
+        <a class="btn btn-fill" href="#contacto" data-i18n="hero.cta1">¿Tenés un proyecto? Hablemos</a>
+        <a class="btn" href="#servicios" data-i18n="hero.cta2">Lo que puedo hacer</a>
       </div>
     </div>
   </section>
@@ -302,47 +280,47 @@ html.no-js .rv{opacity:1;transform:none}
     <div class="wrap">
       <div class="sec-head rv">
         <span class="idx">01</span>
-        <h2>Lo que puedo hacer<i>.</i></h2>
+        <h2><span data-i18n="s1.t">Lo que puedo hacer</span><i>.</i></h2>
         <span class="fill rule"></span>
-        <span class="tag-end">SERVICIOS</span>
+        <span class="tag-end" data-i18n="s1.tag">SERVICIOS</span>
       </div>
 
       <ul class="svc">
         <li>
-          <a href="#contacto" data-svc="landing">
+          <a href="#contacto">
             <span class="no">/01</span>
-            <h3>Landing pages para negocios</h3>
-            <p>Páginas de venta rápidas, con diseño que convierte y carga al instante. Tu negocio con presencia profesional.</p>
+            <h3 data-i18n="svc1.t">Landing pages para negocios</h3>
+            <p data-i18n="svc1.d">La página de tu negocio: clara, rápida y con buen diseño. Los clientes te encuentran y te escriben.</p>
             <span class="arr" aria-hidden="true">↗</span>
           </a>
         </li>
         <li>
-          <a href="#contacto" data-svc="tienda">
+          <a href="#contacto">
             <span class="no">/02</span>
-            <h3>Catálogos y tiendas online</h3>
-            <p>Vitrinas digitales con productos, carrito y checkout. Vendé mientras dormís.</p>
+            <h3 data-i18n="svc2.t">Catálogos y tiendas online</h3>
+            <p data-i18n="svc2.d">Tu tienda online: mostrás tus productos y tus clientes compran directo desde el celular.</p>
             <span class="arr" aria-hidden="true">↗</span>
           </a>
         </li>
         <li>
-          <a href="#contacto" data-svc="app">
+          <a href="#contacto">
             <span class="no">/03</span>
-            <h3>Apps web a medida</h3>
-            <p>Sistemas que resuelven tu problema puntual: gestión, reservas, registros, lo que necesites.</p>
+            <h3 data-i18n="svc3.t">Apps web a medida</h3>
+            <p data-i18n="svc3.d">Turnos, reservas, registros, presupuestos. Si lo llevás en papel o en planillas, se puede hacer mejor.</p>
             <span class="arr" aria-hidden="true">↗</span>
           </a>
         </li>
         <li>
-          <a href="#contacto" data-svc="ia">
+          <a href="#contacto">
             <span class="no">/04</span>
-            <h3>Automatizaciones con IA</h3>
-            <p>Procesos repetitivos resueltos con inteligencia artificial: respuestas, clasificación, contenido.</p>
+            <h3 data-i18n="svc4.t">Automatizaciones con IA</h3>
+            <p data-i18n="svc4.d">Las tareas repetitivas hechas por IA: respuestas automáticas, orden de datos, contenido. Vos ganás ese tiempo.</p>
             <span class="arr" aria-hidden="true">↗</span>
           </a>
         </li>
       </ul>
 
-      <p class="bridge rv">Describime lo que necesitás,<br /><i>yo lo construyo.</i><span class="sub">Respondé con dos líneas · yo me encargo del resto</span></p>
+      <p class="bridge rv"><span data-i18n="br.1">Describime lo que necesitás,</span><br /><i data-i18n="br.2">yo lo construyo.</i><span class="sub" data-i18n="br.sub">Dos líneas alcanzan para arrancar</span></p>
     </div>
   </section>
 
@@ -351,30 +329,29 @@ html.no-js .rv{opacity:1;transform:none}
     <div class="wrap">
       <div class="sec-head rv">
         <span class="idx">02</span>
-        <h2>Sobre mí<i>.</i></h2>
+        <h2><span data-i18n="s2.t">Sobre mí</span><i>.</i></h2>
         <span class="fill rule"></span>
-        <span class="tag-end">QUIÉN</span>
+        <span class="tag-end" data-i18n="s2.tag">QUIÉN</span>
       </div>
 
       <div class="about-grid">
-        <p class="about-claim rv">No soy un programador tradicional:<br />sé <em>qué construir</em> y cómo hacerlo funcionar.</p>
+        <p class="about-claim rv"><span data-i18n="ab.c1">No soy un programador tradicional:</span><br /><span data-i18n="ab.c2">sé</span> <em data-i18n="ab.c3">qué construir</em> <span data-i18n="ab.c4">y cómo hacerlo funcionar.</span></p>
 
         <div class="about-text rv">
-          <p>
-            Bachiller en Programación, 17 años, Córdoba. Construyo apps web funcionales usando
-            <strong>IA como herramienta</strong> — Node.js, Express, Flask, SQLite y HTML/CSS vanilla.
+          <p data-i18n="ab.p1">
+            Tengo 17 años, estudio Programación en Córdoba y uso la inteligencia artificial
+            como una herramienta para construir rápido y bien. Me ocupo de todo el proceso:
+            diseño, desarrollo y puesta en línea.
           </p>
-          <p class="dim">
-            No soy un programador tradicional: soy alguien que sabe qué quiere construir y cómo
-            hacerlo funcionar. Entrego rápido, itero según tu feedback, y uso IA para construir
-            cosas que funcionan de verdad — no prototipos: apps reales corriendo en producción.
+          <p class="dim" data-i18n="ab.p2">
+            Entrego rápido y los cambios que pidas los hago sin vueltas. Me hago cargo del
+            proyecto de punta a punta: de la idea a que esté funcionando en internet.
           </p>
           <div class="diff">
-            <h4>El diferencial</h4>
+            <h4 data-i18n="ab.dh">El diferencial</h4>
             <ul>
-              <li>Entrego rápido: primeras versiones en días, no meses.</li>
-              <li>Itero según feedback: cada versión está más cerca de lo que imaginaste.</li>
-              <li>Uso IA para construir cosas que funcionan de verdad — apps reales en producción.</li>
+              <li data-i18n="ab.l1">Entrego rápido y ajusto lo que pidas hasta que te guste.</li>
+              <li data-i18n="ab.l2">Uso IA para trabajar más rápido, pero todo lo que entrego funciona de verdad: lo podés ver andando en internet.</li>
             </ul>
           </div>
         </div>
@@ -387,67 +364,81 @@ html.no-js .rv{opacity:1;transform:none}
     <div class="wrap">
       <div class="sec-head rv">
         <span class="idx">03</span>
-        <h2>Herramientas<i>.</i></h2>
+        <h2><span data-i18n="s3.t">Herramientas</span><i>.</i></h2>
         <span class="fill rule"></span>
-        <span class="tag-end">STACK</span>
+        <span class="tag-end" data-i18n="s3.tag">STACK</span>
       </div>
 
       <div class="tools">
         <div class="rv">
-          <p class="tool-hero">Node.js<span class="r2">Express · Flask · SQLite</span><span class="r3">Todo desde mi Android.</span></p>
+          <p class="tool-hero">Node.js<span class="r2">Express · Flask · SQLite</span><span class="r3" data-i18n="tools.h3">Todo desde mi Android.</span></p>
         </div>
         <ul class="tools-list rv">
-          <li><span class="t">Node.js</span><span class="u ok">Backend</span></li>
-          <li><span class="t">Express</span><span class="u ok">APIs</span></li>
-          <li><span class="t">Flask</span><span class="u ok">Python</span></li>
-          <li><span class="t">SQLite</span><span class="u ok">Datos</span></li>
-          <li><span class="t">Termux</span><span class="u">Servidor en Android</span></li>
-          <li><span class="t">Git · GitHub</span><span class="u">Versionado</span></li>
-          <li><span class="t">Freebuff</span><span class="u">Deploy</span></li>
-          <li><span class="t">Claude AI</span><span class="u ok">Co-piloto</span></li>
+          <li><span class="t">Node.js</span><span class="u ok" data-i18n="tu.node">El motor</span></li>
+          <li><span class="t">Express</span><span class="u ok" data-i18n="tu.express">Conexiones</span></li>
+          <li><span class="t">Flask</span><span class="u ok" data-i18n="tu.flask">Python</span></li>
+          <li><span class="t">SQLite</span><span class="u ok" data-i18n="tu.sqlite">Donde vive tu información</span></li>
+          <li><span class="t">Termux</span><span class="u" data-i18n="tu.termux">Servidor propio · Android</span></li>
+          <li><span class="t">Git · GitHub</span><span class="u" data-i18n="tu.git">Respaldo y historial</span></li>
+          <li><span class="t">Freebuff</span><span class="u" data-i18n="tu.freebuff">Puesta en línea</span></li>
+          <li><span class="t">Claude AI</span><span class="u ok" data-i18n="tu.claude">Co-piloto</span></li>
         </ul>
       </div>
       <p class="rv" style="max-width:62ch;color:var(--dim);margin:34px 0 0;font-size:17px">
-        Corro los proyectos desde <strong style="color:var(--acid);font-style:italic;font-weight:400">mi propio servidor en Android</strong> — Termux como entorno, Freebuff para deploy. Si funciona ahí, funciona en cualquier lado.
+        <span data-i18n="tools.n1">¿No entendés nada de esta lista? Perfecto: eso es mi problema, no tuyo. Vos contame qué necesitás con tus palabras y yo me encargo de lo técnico. Tus proyectos quedan</span>
+        <strong style="color:var(--acid);font-style:italic;font-weight:400" data-i18n="tools.n2">online y siempre funcionando</strong><span data-i18n="tools.n3">.</span>
       </p>
     </div>
   </section>
 
   <!-- ================= CONTACTO ================= -->
   <section id="contacto">
-    <div class="wrap contact-grid">
+    <div class="wrap">
       <div class="sec-head rv">
         <span class="idx">04</span>
-        <h2>Contacto<i>.</i></h2>
+        <h2><span data-i18n="s4.t">Contacto</span><i>.</i></h2>
         <span class="fill rule"></span>
-        <span class="tag-end">DÓNDE</span>
+        <span class="tag-end" data-i18n="s4.tag">DÓNDE</span>
       </div>
 
-      <p class="giant rv">Tenés un proyecto <i>en mente?</i></p>
+      <p class="giant rv"><span data-i18n="c.g1">¿Tenés un proyecto</span> <i data-i18n="c.g2">en mente?</i></p>
+      <p class="contact-note rv" data-i18n="c.note">Contame qué necesitás en palabras simples. Respondo yo, no un bot.</p>
+
+      <form class="contact-form rv" id="contactForm" novalidate>
+        <label for="cf-name" data-i18n="form.name">Tu nombre (opcional)</label>
+        <input id="cf-name" type="text" maxlength="80" autocomplete="name" />
+        <label for="cf-msg" data-i18n="form.msg">Contame qué necesitás en palabras simples</label>
+        <textarea id="cf-msg" rows="4" maxlength="2000" data-i18n-ph="form.msgPh" placeholder="Ej: Tengo una ferretería y quiero que la gente vea mis productos y me escriba."></textarea>
+        <div class="form-row">
+          <button type="submit" class="btn btn-fill" id="cf-send" data-i18n="form.send">Enviar por WhatsApp</button>
+          <button type="button" class="btn" id="cf-save" data-i18n="form.save">Guardar sin WhatsApp</button>
+        </div>
+        <p class="form-hint" data-i18n="form.hint">Sin WhatsApp? Dejalo guardado acá: Manuel lo lee después.</p>
+      </form>
 
       <ul class="contact-rows rv">
         <li>
           <a href="mailto:manuelcandoliobregon@gmail.com" id="mail-link">
-            <span class="k">Email — tap para copiar</span>
-            <span class="v">manuelcandoliobregon@gmail.com<span class="sub-v">mailto: · también abre tu cliente de correo</span></span>
+            <span class="k" data-i18n="row.email">Email — tocá para copiar</span>
+            <span class="v">manuelcandoliobregon@gmail.com</span>
           </a>
         </li>
         <li>
           <a href="https://wa.me/5493513805496" target="_blank" rel="noopener">
-            <span class="k">WhatsApp</span>
+            <span class="k" data-i18n="row.wa">WhatsApp</span>
             <span class="v">+54 9 351 380 5496</span>
           </a>
         </li>
         <li>
           <a href="https://instagram.com/manucandoli" target="_blank" rel="noopener">
-            <span class="k">Instagram</span>
+            <span class="k" data-i18n="row.ig">Instagram</span>
             <span class="v">@manucandoli</span>
           </a>
         </li>
         <li>
           <div class="row-in">
-            <span class="k">Ubicación</span>
-            <span class="v">Córdoba, Argentina · remoto</span>
+            <span class="k" data-i18n="row.loc">Ubicación</span>
+            <span class="v" data-i18n="row.locv">Córdoba, Argentina · remoto</span>
           </div>
         </li>
       </ul>
@@ -457,9 +448,9 @@ html.no-js .rv{opacity:1;transform:none}
 
 <footer>
   <div class="wrap foot">
-    <p>© <span id="yr2">2026</span> MANUEL CANDOLI · CÓRDOBA</p>
-    <p>HECHO A MANO — HTML · CSS · JS, SIN FRAMEWORKS</p>
-    <p><a href="#top">VOLVER ARRIBA ↑</a></p>
+    <p>© <span id="yr2">2026</span> <span data-i18n="foot.brand">MANUEL CANDOLI · CÓRDOBA</span></p>
+    <p data-i18n="foot.made">HECHO A MANO — SIN PLANTILLAS NI ATAJOS</p>
+    <p><a href="#top" data-i18n="foot.top">VOLVER ARRIBA ↑</a></p>
   </div>
 </footer>
 
@@ -471,26 +462,211 @@ html.no-js .rv{opacity:1;transform:none}
   document.documentElement.classList.remove("no-js");
 
   var EMAIL = "manuelcandoliobregon@gmail.com";
+  var WA = "5493513805496";
 
-  /* reloj de Córdoba (ART) */
+  /* ================= i18n: ES / EN / PT ================= */
+  var I18N = {
+    "es": {
+      "title": "Manuel Candoli — Construyo páginas web que funcionan · Córdoba",
+      "desc": "Manuel Candoli hace páginas web, tiendas online y sistemas a medida para tu negocio. Rápido, claro y funcionando en internet. Córdoba, Argentina.",
+      "nav.s": "Servicios", "nav.a": "Sobre mí", "nav.h": "Herramientas", "nav.c": "Contacto",
+      "lang.aria": "Idioma",
+      "hero.kicker": " — Córdoba, Argentina · ",
+      "hero.h1a": "Construyo", "hero.h1b": "páginas web", "hero.h1c": "que funcionan.",
+      "hero.role": "17 años · Bachiller en Programación · Disponible",
+      "hero.lede": "Hago páginas, tiendas y sistemas web que quedan funcionando en internet. Rápidos, a tu medida y con buen diseño: vos contás qué necesitás, yo me ocupo de todo lo demás.",
+      "hero.cta1": "¿Tenés un proyecto? Hablemos", "hero.cta2": "Lo que puedo hacer",
+      "s1.t": "Lo que puedo hacer", "s1.tag": "SERVICIOS",
+      "svc1.t": "Landing pages para negocios", "svc1.d": "La página de tu negocio: clara, rápida y con buen diseño. Los clientes te encuentran y te escriben.",
+      "svc2.t": "Catálogos y tiendas online", "svc2.d": "Tu tienda online: mostrás tus productos y tus clientes compran directo desde el celular.",
+      "svc3.t": "Apps web a medida", "svc3.d": "Turnos, reservas, registros, presupuestos. Si lo llevás en papel o en planillas, se puede hacer mejor.",
+      "svc4.t": "Automatizaciones con IA", "svc4.d": "Las tareas repetitivas hechas por IA: respuestas automáticas, orden de datos, contenido. Vos ganás ese tiempo.",
+      "br.1": "Describime lo que necesitás,", "br.2": "yo lo construyo.", "br.sub": "Dos líneas alcanzan para arrancar",
+      "s2.t": "Sobre mí", "s2.tag": "QUIÉN",
+      "ab.c1": "No soy un programador tradicional:", "ab.c2": "sé", "ab.c3": "qué construir", "ab.c4": "y cómo hacerlo funcionar.",
+      "ab.p1": "Tengo 17 años, estudio Programación en Córdoba y uso la inteligencia artificial como una herramienta para construir rápido y bien. Me ocupo de todo el proceso: diseño, desarrollo y puesta en línea.",
+      "ab.p2": "Entrego rápido y los cambios que pidas los hago sin vueltas. Me hago cargo del proyecto de punta a punta: de la idea a que esté funcionando en internet.",
+      "ab.dh": "El diferencial",
+      "ab.l1": "Entrego rápido y ajusto lo que pidas hasta que te guste.",
+      "ab.l2": "Uso IA para trabajar más rápido, pero todo lo que entrego funciona de verdad: lo podés ver andando en internet.",
+      "s3.t": "Herramientas", "s3.tag": "STACK", "tools.h3": "Todo desde mi Android.",
+      "tu.node": "El motor", "tu.express": "Conexiones", "tu.flask": "Python", "tu.sqlite": "Donde vive tu información",
+      "tu.termux": "Servidor propio · Android", "tu.git": "Respaldo y historial", "tu.freebuff": "Puesta en línea", "tu.claude": "Co-piloto",
+      "tools.n1": "¿No entendés nada de esta lista? Perfecto: eso es mi problema, no tuyo. Vos contame qué necesitás con tus palabras y yo me encargo de lo técnico. Tus proyectos quedan",
+      "tools.n2": "online y siempre funcionando", "tools.n3": ".",
+      "s4.t": "Contacto", "s4.tag": "DÓNDE",
+      "c.g1": "¿Tenés un proyecto", "c.g2": "en mente?",
+      "c.note": "Contame qué necesitás en palabras simples. Respondo yo, no un bot.",
+      "form.name": "Tu nombre (opcional)", "form.msg": "Contame qué necesitás en palabras simples",
+      "form.msgPh": "Ej: Tengo una ferretería y quiero que la gente vea mis productos y me escriba.",
+      "form.send": "Enviar por WhatsApp", "form.save": "Guardar sin WhatsApp",
+      "form.hint": "Sin WhatsApp? Dejalo guardado acá: Manuel lo lee después.",
+      "row.email": "Email — tocá para copiar", "row.wa": "WhatsApp", "row.ig": "Instagram",
+      "row.loc": "Ubicación", "row.locv": "Córdoba, Argentina · remoto",
+      "toast.copied": "Email copiado: ", "toast.saved": "Guardado. Manuel lo va a leer.",
+      "toast.savefail": "No pude guardar acá: escribime por WhatsApp o Instagram.",
+      "foot.brand": "MANUEL CANDOLI · CÓRDOBA",
+      "foot.made": "HECHO A MANO — SIN PLANTILLAS NI ATAJOS",
+      "foot.top": "VOLVER ARRIBA ↑"
+    },
+    "en": {
+      "title": "Manuel Candoli — I build websites that work · Córdoba",
+      "desc": "Manuel Candoli builds websites, online stores and custom systems for your business. Fast, clear and live on the internet. Córdoba, Argentina.",
+      "nav.s": "Services", "nav.a": "About me", "nav.h": "Tools", "nav.c": "Contact",
+      "lang.aria": "Language",
+      "hero.kicker": " — Córdoba, Argentina · ",
+      "hero.h1a": "I build", "hero.h1b": "websites", "hero.h1c": "that work.",
+      "hero.role": "17 years old · Programming student · Available",
+      "hero.lede": "I make websites, stores and web systems that end up live on the internet. Fast, tailored and well designed: you tell me what you need, I take care of the rest.",
+      "hero.cta1": "Got a project? Let's talk", "hero.cta2": "What I can do",
+      "s1.t": "What I can do", "s1.tag": "SERVICES",
+      "svc1.t": "Landing pages for businesses", "svc1.d": "Your business page: clear, fast and well designed. Customers find you and message you.",
+      "svc2.t": "Catalogs & online stores", "svc2.d": "Your online store: show your products and let customers buy straight from their phone.",
+      "svc3.t": "Custom web apps", "svc3.d": "Bookings, reservations, records, quotes. If you manage it on paper or spreadsheets, it can work better.",
+      "svc4.t": "AI automations", "svc4.d": "Repetitive tasks done by AI: automatic replies, data sorting, content. You get that time back.",
+      "br.1": "Tell me what you need,", "br.2": "I'll build it.", "br.sub": "Two lines are enough to start",
+      "s2.t": "About me", "s2.tag": "WHO",
+      "ab.c1": "I'm not a traditional programmer:", "ab.c2": "I know", "ab.c3": "what to build", "ab.c4": "and how to make it work.",
+      "ab.p1": "I'm 17, I study Programming in Córdoba and I use artificial intelligence as a tool to build fast and well. I handle the whole process: design, development and going live.",
+      "ab.p2": "I deliver fast and I make the changes you ask for, no fuss. I take care of the project end to end: from the idea to it working on the internet.",
+      "ab.dh": "What sets me apart",
+      "ab.l1": "I deliver fast and adjust whatever you ask until you like it.",
+      "ab.l2": "I use AI to work faster, but everything I deliver truly works: you can see it running online.",
+      "s3.t": "Tools", "s3.tag": "STACK", "tools.h3": "All from my Android.",
+      "tu.node": "The engine", "tu.express": "Connections", "tu.flask": "Python", "tu.sqlite": "Where your data lives",
+      "tu.termux": "Own server · Android", "tu.git": "Backup & history", "tu.freebuff": "Going live", "tu.claude": "Co-pilot",
+      "tools.n1": "Don't get any of this list? Perfect: that's my problem, not yours. Tell me what you need in your own words and I'll handle the technical side. Your projects stay",
+      "tools.n2": "online and always running", "tools.n3": ".",
+      "s4.t": "Contact", "s4.tag": "WHERE",
+      "c.g1": "Got a project", "c.g2": "in mind?",
+      "c.note": "Tell me what you need in plain words. I reply myself, no bots.",
+      "form.name": "Your name (optional)", "form.msg": "Tell me what you need in plain words",
+      "form.msgPh": "E.g. I run a hardware store and want people to see my products and message me.",
+      "form.send": "Send via WhatsApp", "form.save": "Save without WhatsApp",
+      "form.hint": "No WhatsApp? Leave your message here: Manuel reads it later.",
+      "row.email": "Email — tap to copy", "row.wa": "WhatsApp", "row.ig": "Instagram",
+      "row.loc": "Location", "row.locv": "Córdoba, Argentina · remote",
+      "toast.copied": "Email copied: ", "toast.saved": "Saved. Manuel will read it.",
+      "toast.savefail": "Couldn't save here: reach me on WhatsApp or Instagram.",
+      "foot.brand": "MANUEL CANDOLI · CÓRDOBA",
+      "foot.made": "HANDMADE — NO TEMPLATES, NO SHORTCUTS",
+      "foot.top": "BACK TO TOP ↑"
+    },
+    "pt": {
+      "title": "Manuel Candoli — Construo sites que funcionam · Córdoba",
+      "desc": "Manuel Candoli faz sites, lojas online e sistemas sob medida para o seu negócio. Rápido, claro e funcionando na internet. Córdoba, Argentina.",
+      "nav.s": "Serviços", "nav.a": "Sobre mim", "nav.h": "Ferramentas", "nav.c": "Contato",
+      "lang.aria": "Idioma",
+      "hero.kicker": " — Córdoba, Argentina · ",
+      "hero.h1a": "Construo", "hero.h1b": "sites", "hero.h1c": "que funcionam.",
+      "hero.role": "17 anos · Estudante de Programação · Disponível",
+      "hero.lede": "Faço sites, lojas e sistemas web que ficam funcionando na internet. Rápidos, sob medida e com bom design: você conta o que precisa, eu cuido do resto.",
+      "hero.cta1": "Tem um projeto? Vamos conversar", "hero.cta2": "O que eu posso fazer",
+      "s1.t": "O que eu posso fazer", "s1.tag": "SERVIÇOS",
+      "svc1.t": "Landing pages para negócios", "svc1.d": "A página do seu negócio: clara, rápida e com bom design. Os clientes te encontram e te escrevem.",
+      "svc2.t": "Catálogos e lojas online", "svc2.d": "Sua loja online: mostra seus produtos e seus clientes compram direto do celular.",
+      "svc3.t": "Apps web sob medida", "svc3.d": "Turnos, reservas, registros, orçamentos. Se você controla no papel ou em planilhas, dá para fazer melhor.",
+      "svc4.t": "Automações com IA", "svc4.d": "Tarefas repetitivas feitas por IA: respostas automáticas, organização de dados, conteúdo. Você ganha esse tempo.",
+      "br.1": "Me conta o que você precisa,", "br.2": "eu construo.", "br.sub": "Duas linhas bastam para começar",
+      "s2.t": "Sobre mim", "s2.tag": "QUEM",
+      "ab.c1": "Não sou um programador tradicional:", "ab.c2": "sei", "ab.c3": "o que construir", "ab.c4": "e como fazer funcionar.",
+      "ab.p1": "Tenho 17 anos, estudo Programação em Córdoba e uso inteligência artificial como ferramenta para construir rápido e bem. Cuido de todo o processo: design, desenvolvimento e publicação.",
+      "ab.p2": "Entrego rápido e faço os ajustes que você pedir, sem enrolação. Cuido do projeto de ponta a ponta: da ideia até estar funcionando na internet.",
+      "ab.dh": "O diferencial",
+      "ab.l1": "Entrego rápido e ajusto o que você pedir até você gostar.",
+      "ab.l2": "Uso IA para trabalhar mais rápido, mas tudo que entrego funciona de verdade: você pode ver rodando na internet.",
+      "s3.t": "Ferramentas", "s3.tag": "STACK", "tools.h3": "Tudo do meu Android.",
+      "tu.node": "O motor", "tu.express": "Conexões", "tu.flask": "Python", "tu.sqlite": "Onde vive sua informação",
+      "tu.termux": "Servidor próprio · Android", "tu.git": "Backup e histórico", "tu.freebuff": "Publicação", "tu.claude": "Co-piloto",
+      "tools.n1": "Não entendeu nada dessa lista? Perfeito: esse é o meu problema, não o seu. Me conta o que precisa com suas palavras e eu cuido da parte técnica. Seus projetos ficam",
+      "tools.n2": "online e sempre funcionando", "tools.n3": ".",
+      "s4.t": "Contato", "s4.tag": "ONDE",
+      "c.g1": "Tem um projeto", "c.g2": "em mente?",
+      "c.note": "Me conta o que precisa com palavras simples. Eu mesmo respondo, sem robô.",
+      "form.name": "Seu nome (opcional)", "form.msg": "Me conta o que precisa com palavras simples",
+      "form.msgPh": "Ex.: Tenho uma loja de ferragens e quero que as pessoas vejam meus produtos e me escrevam.",
+      "form.send": "Enviar por WhatsApp", "form.save": "Salvar sem WhatsApp",
+      "form.hint": "Não usa WhatsApp? Deixe sua mensagem aqui: Manuel lê depois.",
+      "row.email": "Email — toque para copiar", "row.wa": "WhatsApp", "row.ig": "Instagram",
+      "row.loc": "Localização", "row.locv": "Córdoba, Argentina · remoto",
+      "toast.copied": "Email copiado: ", "toast.saved": "Salvo. Manuel vai ler.",
+      "toast.savefail": "Não consegui salvar aqui: me chama no WhatsApp ou Instagram.",
+      "foot.brand": "MANUEL CANDOLI · CÓRDOBA",
+      "foot.made": "FEITO À MÃO — SEM TEMPLATES, SEM ATALHOS",
+      "foot.top": "VOLTAR AO TOPO ↑"
+    }
+  };
+
+  var LANGS = ["es", "en", "pt"];
+  var currentLang = "es";
+
+  function dict(){ return I18N[currentLang] || I18N.es; }
+
+  function applyLang(lang){
+    if (LANGS.indexOf(lang) === -1) lang = "es";
+    currentLang = lang;
+    try { localStorage.setItem("mc-lang", lang); } catch(e){}
+    var d = dict();
+    document.documentElement.setAttribute("lang", lang);
+    document.title = d["title"];
+    var md = document.querySelector('meta[name="description"]');
+    if (md) md.setAttribute("content", d["desc"]);
+    var nodes = document.querySelectorAll("[data-i18n]");
+    for (var i = 0; i < nodes.length; i++) {
+      var k = nodes[i].getAttribute("data-i18n");
+      if (d[k] !== undefined) nodes[i].textContent = d[k];
+    }
+    var phNodes = document.querySelectorAll("[data-i18n-ph]");
+    for (var j = 0; j < phNodes.length; j++) {
+      var kp = phNodes[j].getAttribute("data-i18n-ph");
+      if (d[kp] !== undefined) phNodes[j].setAttribute("placeholder", d[kp]);
+    }
+    var btns = document.querySelectorAll(".lang button");
+    for (var b = 0; b < btns.length; b++) {
+      btns[b].classList.toggle("on", btns[b].getAttribute("data-lang") === lang);
+    }
+  }
+
+  var langBox = document.querySelector(".lang");
+  if (langBox) {
+    langBox.addEventListener("click", function(ev){
+      var b = ev.target.closest("button[data-lang]");
+      if (b) applyLang(b.getAttribute("data-lang"));
+    });
+  }
+
+  /* idioma inicial: guardado > navegador > español */
+  (function initLang(){
+    var saved = null;
+    try { saved = localStorage.getItem("mc-lang"); } catch(e){}
+    var guess = "es";
+    if (saved && LANGS.indexOf(saved) !== -1) guess = saved;
+    else {
+      var nav = (navigator.languages && navigator.languages[0]) || navigator.language || "es";
+      var two = String(nav).slice(0, 2).toLowerCase();
+      if (LANGS.indexOf(two) !== -1) guess = two;
+    }
+    applyLang(guess);
+  })();
+
+  /* ================= reloj de Córdoba (ART) ================= */
   function tick(){
     var t = new Date().toLocaleTimeString("es-AR", {
       timeZone: "America/Argentina/Cordoba",
       hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
     });
-    var a = document.getElementById("clock"), b = document.getElementById("clock2");
+    var a = document.getElementById("clock");
     if (a) a.textContent = t + " ART";
-    if (b) b.textContent = t + " ART";
   }
   tick(); setInterval(tick, 1000);
 
-  /* año dinámico */
+  /* ================= año dinámico ================= */
   var y = String(new Date().getFullYear());
   var yr = document.getElementById("yr"), yr2 = document.getElementById("yr2");
   if (yr) yr.textContent = y;
   if (yr2) yr2.textContent = y;
 
-  /* reveals */
+  /* ================= reveals ================= */
   var rvs = document.querySelectorAll(".rv");
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function(es){
@@ -503,18 +679,19 @@ html.no-js .rv{opacity:1;transform:none}
     rvs.forEach(function(el){ el.classList.add("in"); });
   }
 
-  /* toast + copiar email (fallback para contextos sin clipboard) */
+  /* ================= toast ================= */
   var toastEl = document.getElementById("toast"), tTimer = null;
   function toast(m){
     toastEl.textContent = m; toastEl.classList.add("on");
     clearTimeout(tTimer);
-    tTimer = setTimeout(function(){ toastEl.classList.remove("on"); }, 2200);
+    tTimer = setTimeout(function(){ toastEl.classList.remove("on"); }, 2600);
   }
 
+  /* ================= copiar email ================= */
   var mail = document.getElementById("mail-link");
   if (mail) {
     mail.addEventListener("click", function(ev){
-      function ok(){ toast("Email copiado: " + EMAIL); }
+      function ok(){ toast(dict()["toast.copied"] + EMAIL); }
       function legacy(){
         try {
           var ta = document.createElement("textarea");
@@ -535,10 +712,50 @@ html.no-js .rv{opacity:1;transform:none}
     });
   }
 
-  /* enlace de WhatsApp */
-  var WA = "5493513805496";
-  var wa = document.querySelector('a[href^="https://wa.me/"]');
-  if (wa) wa.setAttribute("href", "https://wa.me/" + WA);
+  /* ================= formulario de contacto ================= */
+  var form = document.getElementById("contactForm");
+  var nameEl = document.getElementById("cf-name");
+  var msgEl = document.getElementById("cf-msg");
+
+  function getText(){
+    var n = (nameEl.value || "").trim();
+    var m = (msgEl.value || "").trim();
+    return { name: n, msg: m };
+  }
+
+  if (form) {
+    /* botón principal: abre WhatsApp con el mensaje armado */
+    form.addEventListener("submit", function(ev){
+      ev.preventDefault();
+      var t = getText();
+      if (!t.msg) { msgEl.focus(); return; }
+      var text = t.name ? ("Hola Manuel, soy " + t.name + ". " + t.msg) : ("Hola Manuel. " + t.msg);
+      window.open("https://wa.me/" + WA + "?text=" + encodeURIComponent(text), "_blank", "noopener");
+    });
+
+    /* botón secundario: guarda en el servidor local (Termux) */
+    var saveBtn = document.getElementById("cf-save");
+    if (saveBtn) {
+      saveBtn.addEventListener("click", function(){
+        var t = getText();
+        if (!t.msg) { msgEl.focus(); return; }
+        saveBtn.disabled = true;
+        fetch("/api/feedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: t.name, message: t.msg })
+        }).then(function(res){
+          if (!res.ok) throw new Error("bad status");
+          toast(dict()["toast.saved"]);
+          msgEl.value = "";
+        }).catch(function(){
+          toast(dict()["toast.savefail"]);
+        }).finally(function(){
+          saveBtn.disabled = false;
+        });
+      });
+    }
+  }
 })();
 </script>
 </body>
