@@ -3,26 +3,27 @@
 @tailwind utilities;
 
 /* ============================================================
-   Tokens "Manuscrito técnico": tinta oliva, marfil, chartreuse.
-   Sin degradados decorativos — la retícula son líneas de 1px.
+   Tema "Señal sobre negro": negro profundo #0a0a0a + celeste
+   eléctrico #38bdf8 (sky-400). Tipografía sans para títulos, mono para
+   etiquetas. Hovers con borde celeste y glow suave.
    ============================================================ */
 :root {
-  --background: #0d0f0d;
-  --foreground: #e9e6da;
-  --card: #171a16;
-  --card-elevated: #121412;
-  --primary: #c9f25e;
-  --primary-foreground: #141608;
-  --secondary: #39413a;
-  --secondary-foreground: #e9e6da;
-  --muted: #121412;
-  --muted-foreground: #8f9686;
-  --faint: #5b6357;
+  --background: #0a0a0a;
+  --foreground: #e8eaed;
+  --card: #101214;
+  --card-elevated: #0d0f11;
+  --primary: #38bdf8;
+  --primary-foreground: #04121b;
+  --secondary: #2a2e31;
+  --secondary-foreground: #e8eaed;
+  --muted: #0d0f11;
+  --muted-foreground: #8a929a;
+  --faint: #565e66;
   --destructive: #e5484d;
-  --border: #262b24;
-  --border-strong: #39413a;
-  --input: #121412;
-  --radius: 2px;
+  --border: #1d2023;
+  --border-strong: #2a2e31;
+  --input: #0d0f11;
+  --radius: 12px;
 }
 
 @layer base {
@@ -34,7 +35,7 @@
     scroll-padding-top: 76px;
   }
   body {
-    @apply bg-background text-foreground font-serif antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     text-rendering: optimizeLegibility;
   }
   ::selection {
