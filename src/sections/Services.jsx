@@ -34,7 +34,7 @@ export default function Services() {
             <a
               key={c.n}
               href="#contacto"
-              className="group relative flex min-h-[240px] flex-col rounded-xl border border-border bg-card p-6 no-underline transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_34px_rgba(56,189,248,0.14)]"
+              className="group relative flex min-h-[240px] flex-col rounded-2xl border border-border bg-card p-6 shadow-lg shadow-black/30 no-underline transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_34px_rgba(56,189,248,0.14)]"
             >
               <span className="font-mono text-xs tracking-[0.14em] text-faint transition-colors group-hover:text-primary">
                 /{c.n}

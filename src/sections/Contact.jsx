@@ -94,15 +94,22 @@ export default function Contact() {
           <span className="hidden font-mono text-[11px] tracking-[0.24em] text-faint sm:inline">{t("s4.tag")}</span>
         </div>
 
+        {/* Statement monumental al aire + formulario en card con glow (estilo Cruip) */}
         <p
           ref={giant}
-          className="rv m-0 font-sans text-[clamp(52px,11vw,160px)] font-semibold leading-[0.95] tracking-[-0.03em]"
+          className="rv m-0 font-sans text-[clamp(44px,9vw,120px)] font-semibold leading-[0.98] tracking-[-0.03em]"
         >
           {t("c.g1")} <i className="text-primary">{t("c.g2")}</i>
         </p>
         <p className="mt-6 max-w-[44ch] text-lg leading-relaxed text-muted-foreground">{t("c.note")}</p>
 
-        <form ref={formRef} noValidate onSubmit={sendWhatsApp} className="rv mt-9 mb-12 grid max-w-[640px] gap-3">
+        <div className="rv relative mt-10 overflow-hidden rounded-2xl bg-card p-6 shadow-xl shadow-black/40 sm:p-10">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 left-1/2 h-56 w-[460px] max-w-[90%] -translate-x-1/2 translate-y-1/2 rounded-full border-[20px] border-sky-500/50 blur-3xl"
+          />
+
+        <form ref={formRef} noValidate onSubmit={sendWhatsApp} className="relative mx-auto grid max-w-[640px] gap-3 text-left">
           <label htmlFor="cf-name" className="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
             {t("form.name")}
           </label>
@@ -136,8 +143,9 @@ export default function Contact() {
           </div>
           <p className="m-0 mt-0.5 font-mono text-[11px] tracking-[0.1em] text-faint">{t("form.hint")}</p>
         </form>
+        </div>
 
-        <ul ref={rowsRef} className="rv m-0 list-none border-t border-border-strong p-0">
+        <ul ref={rowsRef} className="rv m-0 mt-12 list-none border-t border-border-strong p-0">
           <li className="border-b border-border">
             <a
               href={"mailto:" + EMAIL}

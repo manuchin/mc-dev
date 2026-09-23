@@ -59,7 +59,7 @@ function ProjectCard({ p, t }) {
     <a
       ref={ref}
       href="#contacto"
-      className="rv group flex flex-col rounded-xl border border-border bg-card p-6 pb-7 no-underline transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_36px_rgba(56,189,248,0.14)]"
+      className="rv group flex flex-col rounded-2xl border border-border bg-card p-6 pb-7 shadow-lg shadow-black/30 no-underline transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_36px_rgba(56,189,248,0.14)]"
     >
       <div className="flex items-baseline justify-between gap-4">
         <h3 className="m-0 font-sans text-[20px] font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover:text-primary">

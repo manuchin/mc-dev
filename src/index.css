@@ -3,27 +3,26 @@
 @tailwind utilities;
 
 /* ============================================================
-   Tema "Señal sobre negro": negro profundo #0a0a0a + celeste
-   eléctrico #38bdf8 (sky-400). Tipografía sans para títulos, mono para
-   etiquetas. Hovers con borde celeste y glow suave.
+   Tokens "Manuscrito técnico" v2: negro + blanco + celeste.
+   Misma retícula editorial de siempre, color de Belgrano.
    ============================================================ */
 :root {
   --background: #0a0a0a;
-  --foreground: #e8eaed;
+  --foreground: #f2f4f6;
   --card: #101214;
   --card-elevated: #0d0f11;
   --primary: #38bdf8;
   --primary-foreground: #04121b;
-  --secondary: #2a2e31;
-  --secondary-foreground: #e8eaed;
+  --secondary: #263038;
+  --secondary-foreground: #f2f4f6;
   --muted: #0d0f11;
-  --muted-foreground: #8a929a;
-  --faint: #565e66;
+  --muted-foreground: #9aa5af;
+  --faint: #5f6a74;
   --destructive: #e5484d;
-  --border: #1d2023;
-  --border-strong: #2a2e31;
+  --border: #1d2126;
+  --border-strong: #2c333b;
   --input: #0d0f11;
-  --radius: 12px;
+  --radius: 2px;
 }
 
 @layer base {
@@ -35,7 +34,7 @@
     scroll-padding-top: 76px;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-serif antialiased;
     text-rendering: optimizeLegibility;
   }
   ::selection {
@@ -45,6 +44,16 @@
 }
 
 @layer utilities {
+  /* líneas fade estilo Cruip: borde con imagen degradada */
+  .hairline-b {
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.35), transparent) 1;
+  }
+  .hairline-y {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.35), transparent) 1;
+  }
   /* retícula técnica de fondo: líneas, no degradados */
   .grid-bg {
     position: fixed;
@@ -55,7 +64,7 @@
       linear-gradient(var(--border) 1px, transparent 1px),
       linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 160px 160px;
-    opacity: 0.12;
+    opacity: 0.09;
     -webkit-mask-image: linear-gradient(#000 40%, transparent 90%);
     mask-image: linear-gradient(#000 40%, transparent 90%);
   }
@@ -80,4 +89,28 @@
     transform: none;
     transition: none;
   }
+  .term-line {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .term-cursor {
+    animation: none !important;
+  }
 }
+
+/* Terminal del hero (estilo Cruip): líneas que aparecen en secuencia,
+   ciclo de 14s, cursor parpadeante. */
+.term-line {
+  opacity: 0;
+}
+.tl1 { animation: term-l1 14s infinite; }
+.tl2 { animation: term-l2 14s infinite; }
+.tl3 { animation: term-l3 14s infinite; }
+.tl4 { animation: term-l4 14s infinite; }
+.term-cursor { animation: term-blink 1.1s steps(1) infinite; }
+
+@keyframes term-l1 { 0%, 3% { opacity: 0; } 5%, 92% { opacity: 1; } 95%, 100% { opacity: 0; } }
+@keyframes term-l2 { 0%, 13% { opacity: 0; } 15%, 92% { opacity: 1; } 95%, 100% { opacity: 0; } }
+@keyframes term-l3 { 0%, 26% { opacity: 0; } 28%, 92% { opacity: 1; } 95%, 100% { opacity: 0; } }
+@keyframes term-l4 { 0%, 40% { opacity: 0; } 42%, 92% { opacity: 1; } 95%, 100% { opacity: 0; } }
+@keyframes term-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
