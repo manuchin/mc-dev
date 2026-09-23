@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Tokens "Manuscrito técnico": tinta oliva, marfil, chartreuse.
+   Sin degradados decorativos — la retícula son líneas de 1px.
+   ============================================================ */
+:root {
+  --background: #0d0f0d;
+  --foreground: #e9e6da;
+  --card: #171a16;
+  --card-elevated: #121412;
+  --primary: #c9f25e;
+  --primary-foreground: #141608;
+  --secondary: #39413a;
+  --secondary-foreground: #e9e6da;
+  --muted: #121412;
+  --muted-foreground: #8f9686;
+  --faint: #5b6357;
+  --destructive: #e5484d;
+  --border: #262b24;
+  --border-strong: #39413a;
+  --input: #121412;
+  --radius: 2px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 76px;
+  }
+  body {
+    @apply bg-background text-foreground font-serif antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+@layer utilities {
+  /* retícula técnica de fondo: líneas, no degradados */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 160px 160px;
+    opacity: 0.12;
+    -webkit-mask-image: linear-gradient(#000 40%, transparent 90%);
+    mask-image: linear-gradient(#000 40%, transparent 90%);
+  }
+  /* reveal on scroll */
+  .rv {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .rv.in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rv {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

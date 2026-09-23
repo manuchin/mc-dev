@@ -50,29 +50,33 @@ for (const f of ["server.js", "scripts/test.js"]) {
   }
 }
 
-/* ---------- 2. contenido de index.html ---------- */
-section("2. Contenido de index.html");
+/* ---------- 2. contenido de los fuentes ---------- */
+section("2. Contenido de los fuentes (src/)");
 const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+const i18nSrc = fs.readFileSync(path.join(ROOT, "src", "i18n.js"), "utf8");
+const contactSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Contact.jsx"), "utf8");
+const headerSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Header.jsx"), "utf8");
+const i18nProviderSrc = fs.readFileSync(path.join(ROOT, "src", "i18n.jsx"), "utf8");
 
-ok("usa atributos data-i18n", /data-i18n=/.test(html));
-ok("incluye las 3 lenguas (es/en/pt)", /"es"\s*:\s*{/.test(html) && /"en"\s*:\s*{/.test(html) && /"pt"\s*:\s*{/.test(html));
-ok("hay switcher de idioma", /data-lang="es"/.test(html) && /data-lang="en"/.test(html) && /data-lang="pt"/.test(html));
-ok("auto-detección de idioma del navegador", /navigator\.languages/.test(html));
-ok("persistencia del idioma (localStorage)", /localStorage\.setItem\("mc-lang"/.test(html));
-ok("formulario de contacto presente", /id="contactForm"/.test(html));
-ok("botón enviar por WhatsApp", /wa\.me\/" \+ WA \+ "\?text="/.test(html) || /wa\.me\/5493513805496/.test(html));
-ok("botón guardar sin WhatsApp (POST /api/feedback)", /fetch\("\/api\/feedback"/.test(html));
-ok("email correcto", /manuelcandoliobregon@gmail\.com/.test(html));
-ok("WhatsApp correcto", /5493513805496/.test(html));
-ok("Instagram correcto", /instagram\.com\/manucandoli/.test(html));
-ok("sin emojis visibles en el body", !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(html));
+ok("usa hook useI18n (t)", /useI18n/.test(headerSrc));
+ok("incluye las 3 lenguas (es/en/pt)", /es\s*:\s*{/.test(i18nSrc) && /en\s*:\s*{/.test(i18nSrc) && /pt\s*:\s*{/.test(i18nSrc));
+ok("hay switcher de idioma", /data-lang=\{l\}/.test(headerSrc) && /LANGS|langs/.test(headerSrc));
+ok("auto-detección de idioma del navegador", /navigator\.languages/.test(i18nSrc));
+ok("persistencia del idioma (localStorage)", /localStorage\.setItem\("mc-lang"/.test(i18nProviderSrc));
+ok("formulario de contacto presente", /cf-msg/.test(contactSrc));
+ok("botón enviar por WhatsApp", /wa\.me\/" \+ WA \+ "\?text="/.test(contactSrc));
+ok("botón guardar sin WhatsApp (POST /api/feedback)", /fetch\("\/api\/feedback"/.test(contactSrc));
+ok("email correcto", /manuelcandoliobregon@gmail\.com/.test(contactSrc));
+ok("WhatsApp correcto", /5493513805496/.test(contactSrc));
+ok("Instagram correcto", /instagram\.com\/manucandoli/.test(contactSrc));
+ok("sin emojis visibles en los fuentes", !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(contactSrc + headerSrc));
 ok("meta viewport", /name="viewport"/.test(html));
-ok("reduced-motion respetado", /prefers-reduced-motion/.test(html));
+ok("reduced-motion respetado", /prefers-reduced-motion/.test(fs.readFileSync(path.join(ROOT, "src", "index.css"), "utf8")));
 
 /* ---------- 3. paridad i18n ---------- */
 section("3. Paridad de claves i18n");
 function extractDict(src, lang) {
-  const re = new RegExp('"' + lang + '"\\s*:\\s*{([\\s\\S]*?)\\n    }');
+  const re = new RegExp('  ' + lang + ':\\s*{([\\s\\S]*?)\\n  },');
   const m = src.match(re);
   if (!m) return null;
   const keys = [];
@@ -81,9 +85,9 @@ function extractDict(src, lang) {
   while ((k = kre.exec(m[1]))) keys.push(k[1]);
   return keys;
 }
-const esKeys = extractDict(html, "es") || [];
-const enKeys = extractDict(html, "en") || [];
-const ptKeys = extractDict(html, "pt") || [];
+const esKeys = extractDict(i18nSrc, "es") || [];
+const enKeys = extractDict(i18nSrc, "en") || [];
+const ptKeys = extractDict(i18nSrc, "pt") || [];
 ok("diccionario es extraído (" + esKeys.length + " claves)", esKeys.length > 40);
 ok("diccionario en extraído (" + enKeys.length + " claves)", enKeys.length > 40);
 ok("diccionario pt extraído (" + ptKeys.length + " claves)", ptKeys.length > 40);
@@ -125,8 +129,19 @@ if (fs.existsSync(path.join(ROOT, "dist/index.html"))) {
   ok("dist/index.html existe", true);
   ok("dist/robots.txt existe", fs.existsSync(path.join(ROOT, "dist/robots.txt")));
   const distHtml = fs.readFileSync(path.join(ROOT, "dist/index.html"), "utf8");
-  ok("dist/index.html mantiene el formulario", /contactForm/.test(distHtml));
-  ok("dist/index.html mantiene i18n", /data-lang="pt"/.test(distHtml));
+  ok("dist/index.html monta el root de React", /id="root"/.test(distHtml));
+  const assetsDir = path.join(ROOT, "dist", "assets");
+  if (fs.existsSync(assetsDir)) {
+    const assets = fs.readdirSync(assetsDir);
+    ok("dist tiene CSS con Tailwind", assets.some((a) => a.endsWith(".css")));
+    ok("dist tiene bundle JS", assets.some((a) => a.endsWith(".js")));
+    const jsFile = assets.find((a) => a.endsWith(".js"));
+    if (jsFile) {
+      const js = fs.readFileSync(path.join(assetsDir, jsFile), "utf8");
+      ok("bundle incluye diccionarios i18n", js.includes("Construyo") && js.includes("Construo"));
+      ok("bundle incluye email y WhatsApp", js.includes("manuelcandoliobregon@gmail.com") && js.includes("5493513805496"));
+    }
+  }
 } else {
   console.log("  – dist/ no existe todavía (se genera en el deploy)");
 }
@@ -185,7 +200,7 @@ waitReady
 
       const idx = await req("GET", "/");
       ok("GET / → 200 con HTML", idx.status === 200 && /<!doctype html>/i.test(idx.text));
-      ok("/ incluye formulario", /contactForm/.test(idx.text));
+      ok("/ sirve el shell con #root (React)", /id="root"/.test(idx.text));
 
       const post1 = await req("POST", "/api/feedback", { name: "Test", message: "Hola, probando", lang: "es" });
       ok("POST /api/feedback → 201", post1.status === 201 && post1.json && post1.json.ok === true);

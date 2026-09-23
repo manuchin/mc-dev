@@ -23,6 +23,12 @@ const HOST = "0.0.0.0";
 const DATA_FILE = process.env.FEEDBACK_FILE || path.join(ROOT, "data", "feedback.json");
 const BODY_LIMIT = 10 * 1024; // 10 KB
 
+/* Sirve dist/ (build de Vite) si existe; si no, el index.html raíz.
+   Así en Termux alcanza con git pull + node server.js: sin build. */
+const STATIC_ROOT = fs.existsSync(path.join(ROOT, "dist", "index.html"))
+  ? path.join(ROOT, "dist")
+  : ROOT;
+
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -213,10 +219,27 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (urlPath.endsWith("/")) urlPath += "index.html";
-  const filePath = path.normalize(path.join(ROOT, urlPath));
+  let filePath = null;
 
-  if (!filePath.startsWith(ROOT)) {
-    res.writeHead(403).end("Forbidden");
+  /* prioridad: dist/ (build de Vite) si existe ahí; fallback al repo */
+  if (STATIC_ROOT !== ROOT) {
+    const inDist = path.normalize(path.join(STATIC_ROOT, urlPath));
+    if (inDist.startsWith(STATIC_ROOT) && fs.existsSync(inDist)) {
+      filePath = inDist;
+    }
+  }
+  if (!filePath) {
+    const inRepo = path.normalize(path.join(ROOT, urlPath));
+    if (!inRepo.startsWith(ROOT)) {
+      res.writeHead(403).end("Forbidden");
+      return;
+    }
+    if (fs.existsSync(inRepo)) {
+      filePath = inRepo;
+    }
+  }
+  if (!filePath) {
+    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("404 — no encontrado");
     return;
   }
 

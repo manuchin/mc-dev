@@ -1,8 +1,10 @@
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// Build del portfolio para Freebuff hosting: procesa index.html y emite
-// dist/ con assets estáticos. El sitio sigue siendo vanilla puro.
+// Portfolio de Manuel Candoli — React + Tailwind, estructura shadcn.
+// El build emite dist/ estático para hosting y para Termux (se sirve con server.js).
 export default defineConfig({
+  plugins: [react()],
   build: {
     outDir: "dist",
     emptyOutDir: true,
