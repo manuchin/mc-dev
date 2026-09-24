@@ -84,6 +84,7 @@ function ProjectCard({ p, t }) {
 export default function Projects() {
   const { t } = useI18n();
   const head = useReveal();
+  const intro = useReveal();
 
   return (
     <section id="ejemplos" className="py-20 sm:py-28 lg:py-32">
@@ -98,7 +99,7 @@ export default function Projects() {
           <span className="hidden font-mono text-[11px] tracking-[0.24em] text-faint sm:inline">{t("prj.tag")}</span>
         </div>
 
-        <p className="rv m-0 mb-8 max-w-[62ch] text-[17px] leading-relaxed text-muted-foreground">{t("prj.intro")}</p>
+        <p ref={intro} className="rv m-0 mb-8 max-w-[62ch] text-[17px] leading-relaxed text-muted-foreground">{t("prj.intro")}</p>
 
         <div className="grid gap-5 lg:grid-cols-3">
           {PROJECTS.map((p) => (

@@ -80,7 +80,7 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6">
           <p className="m-0 font-mono text-[10.5px] tracking-[0.14em] text-faint">{t("foot.made")}</p>
-          <p className="m-0 font-mono text-[10.5px] tracking-[0.14em] text-faint">CÓRDOBA ARG · 31.4°S 64.1°O</p>
+          <p className="m-0 font-mono text-[10.5px] tracking-[0.14em] text-faint">CÓRDOBA, ARGENTINA</p>
         </div>
       </div>
     </footer>

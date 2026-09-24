@@ -2,7 +2,7 @@
 
 Portfolio de Manuel Candoli — 17 años, Córdoba, Argentina. Páginas web, tiendas online, sistemas a medida y automatizaciones con IA.
 
-**Trilingüe (ES/EN/PT)** con detección automática del idioma del navegador y switcher manual. El sitio es **vanilla HTML/CSS/JS autocontenido**; el build usa Vite para el hosting.
+**Trilingüe (ES/EN/PT)** con detección automática del idioma del navegador y switcher manual. El front es **React + Tailwind** (build con Vite); el servidor local es Node puro, sin dependencias.
 
 ---
 
@@ -18,7 +18,7 @@ git pull                       # traer lo último (si ya lo clonaste)
 node server.js
 ```
 
-No hace falta `npm install`: el servidor y los tests corren sin dependencias.
+No hace falta `npm install`: el servidor, los tests y `dist/` (el sitio ya compilado) están versionados.
 
 Abrí el navegador del celu en **http://localhost:4173** — listo. El sitio entero corre desde tu Android.
 
@@ -42,14 +42,16 @@ El hosting corre: `npm install` + `vite build` → `dist/`. En producción el si
 node scripts/test.js
 ```
 
-Checks: sintaxis, contenido, paridad de claves i18n (es/en/pt), build con Vite (se salta si no hay `node_modules`, modo Termux), y un servidor real efímero que prueba health, estáticos, POST con límite de frecuencia, XSS, acceso solo-localhost, 404 y path traversal.
+Checks (58 en total): sintaxis, contenido, paridad de claves i18n (es/en/pt), build con Vite, y un servidor real efímero que prueba health, estáticos, POST con límite de frecuencia, XSS, acceso solo-localhost, 404, path traversal, byte nulo y que `data/`, `server.js`, `.env` y `scripts/` **nunca** se sirvan como archivos estáticos.
 
 ## Estructura
 
 ```
-index.html          # el sitio completo: CSS y JS inline, i18n ES/EN/PT
+index.html          # shell de React (Vite)
+src/                # secciones, i18n ES/EN/PT, componentes ui
 server.js           # servidor estático + API /api/feedback (cero dependencias)
 vite.config.mjs     # build para hosting (emite dist/)
+dist/               # sitio compilado, versionado para Termux (git pull + node server.js)
 public/robots.txt   # copiado a dist/ por Vite
 scripts/test.js     # suite de tests sin dependencias
 data/feedback.json  # base de datos local de mensajes (git-ignored)
