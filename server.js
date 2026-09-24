@@ -22,6 +22,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const https = require("https");
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT) || 4173;
@@ -29,6 +30,13 @@ const HOST = "0.0.0.0";
 const DATA_FILE = process.env.FEEDBACK_FILE || path.join(ROOT, "data", "feedback.json");
 const BODY_LIMIT = 10 * 1024; // 10 KB
 const MAX_MESSAGES = 500;
+
+/* Aviso por email (opcional): si existe RESEND_API_KEY, cada mensaje que
+   llega a la bandeja avisa a NOTIFY_EMAIL con un mailto de respuesta listo.
+   Sin la key, todo sigue funcionando igual — la bandeja es la fuente. */
+const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || "manuelcandoliobregon@gmail.com";
+const OWNER_NAME = "Manuel";
 
 /* Sirve dist/ (build de Vite) si existe; si no, el index.html raíz. */
 const STATIC_ROOT = fs.existsSync(path.join(ROOT, "dist", "index.html"))
@@ -108,6 +116,45 @@ function tooManyRequests(ip) {
 }
 
 /* ---------- helpers ---------- */
+function notifyByEmail(entry) {
+  if (!RESEND_API_KEY) return; // sin key: silencioso, la bandeja es la fuente
+  const subject =
+    "Nuevo mensaje del portfolio" + (entry.name ? " — " + entry.name : "") +
+    (entry.lang ? " [" + entry.lang + "]" : "");
+  const lines = [
+    entry.message,
+    "",
+    "— — —",
+    "Nombre: " + (entry.name || "(no dijo)"),
+    "Contacto para responder: " + (entry.reply || "(NO DEJO CONTACTO — responder por la bandeja no aplica)"),
+    "Idioma: " + (entry.lang || "?") + " · Página: " + (entry.page || "local"),
+    "Fecha: " + entry.ts,
+  ];
+  const payload = JSON.stringify({
+    from: "Portfolio <onboarding@resend.dev>",
+    to: [NOTIFY_EMAIL],
+    subject,
+    text: lines.join("\n"),
+  });
+  const req = https.request(
+    {
+      hostname: "api.resend.com",
+      path: "/emails",
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + RESEND_API_KEY,
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(payload),
+      },
+      timeout: 8000,
+    },
+    (r) => { r.resume(); } // drenar respuesta
+  );
+  req.on("error", () => {}); // nunca romper el guardado por un fallo de email
+  req.on("timeout", () => req.destroy());
+  req.end(payload);
+}
+
 function json(res, code, obj) {
   res.writeHead(code, Object.assign({ "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }, SEC));
   res.end(JSON.stringify(obj));
@@ -149,12 +196,34 @@ function inboxHtml(list) {
       const lang = m.lang ? ' <span style="color:#565e66">[' + escapeHtml(m.lang) + "]</span>" : "";
       const page = m.page && !/localhost/.test(m.page)
         ? ' <span style="color:#565e66">(desde ' + escapeHtml(m.page) + ")</span>" : "";
+      /* cómo responderle a esta persona */
+      const contact = (m.reply || "").trim();
+      let replyBtn = '<span style="color:#8a929a;font:13px Arial,sans-serif">Sin contacto — se perdió</span>';
+      if (contact) {
+        const digits = contact.replace(/\D/g, "");
+        const looksPhone = digits.length >= 8 && !contact.includes("@");
+        const looksMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+        if (looksMail) {
+          replyBtn =
+            '<a href="mailto:' + escapeHtml(contact) + '?subject=' + encodeURIComponent("Tu mensaje del portfolio") +
+            '" style="display:inline-block;margin-top:8px;background:#38bdf8;color:#04121b;font:bold 13px Arial,sans-serif;padding:8px 14px;border-radius:6px;text-decoration:none">RESPONDER POR EMAIL</a>';
+        } else if (looksPhone) {
+          let wa = digits;
+          if (wa.length === 10) wa = "54" + wa; // móvil argentino sin país
+          replyBtn =
+            '<a href="https://wa.me/' + wa + '?text=' + encodeURIComponent("Hola! Soy Manuel, te escribo por tu mensaje del portfolio.") +
+            '" target="_blank" style="display:inline-block;margin-top:8px;background:#38bdf8;color:#04121b;font:bold 13px Arial,sans-serif;padding:8px 14px;border-radius:6px;text-decoration:none">RESPONDER POR WHATSAPP</a>';
+        } else {
+          replyBtn = '<span style="font:13px Arial,sans-serif;color:#e8eaed">Contacto tal cual: <b>' + escapeHtml(contact) + "</b></span>";
+        }
+      }
       return (
         '<li style="margin:0 0 18px">' +
         '<div style="font:11px monospace;color:#565e66;letter-spacing:.08em">' +
         escapeHtml(when) + lang + page + "</div>" +
         '<div style="font:17px Arial,sans-serif;color:#e8eaed;margin:4px 0 0">' + name +
-        escapeHtml(m.message) + "</div></li>"
+        escapeHtml(m.message) + "</div>" +
+        '<div style="margin-top:6px">' + replyBtn + "</div></li>"
       );
     })
     .reverse()
@@ -217,6 +286,7 @@ const server = http.createServer(async (req, res) => {
         id: crypto.randomBytes(6).toString("hex"),
         ts: new Date().toISOString(),
         name: clean(body.name, 80),
+        reply: clean(body.reply, 120),
         message,
         lang: clean(body.lang, 5),
         page: clean(body.page, 120),
@@ -225,6 +295,7 @@ const server = http.createServer(async (req, res) => {
       list.push(entry);
       if (list.length > MAX_MESSAGES) list.splice(0, list.length - MAX_MESSAGES);
       saveFeedback(list);
+      notifyByEmail(entry);
       json(res, 201, { ok: true, id: entry.id });
     } catch {
       json(res, 400, { ok: false, error: "invalid body" });

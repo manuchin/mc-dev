@@ -28,7 +28,9 @@ Abrí el navegador del celu en **http://localhost:4173** — listo. El sitio ent
 http://localhost:4173/bandeja
 ```
 
-Cuando alguien deja un mensaje en el formulario ("Guardar sin WhatsApp"), aparece ahí y queda guardado en `data/feedback.json` — la base de datos vive en tu celu. También podés ver el JSON crudo en `http://localhost:4173/api/feedback`.
+Cuando alguien deja un mensaje en el formulario ("Guardar sin WhatsApp"), aparece ahí y queda guardado en `data/feedback.json` — la base de datos vive en tu celu. Cada mensaje muestra un botón **RESPONDER POR WHATSAPP / EMAIL** con el contacto que dejó la persona (si no dejó contacto, la bandeja lo marca como perdido). También podés ver el JSON crudo en `http://localhost:4173/api/feedback`.
+
+**Aviso por email (opcional):** si definís `RESEND_API_KEY` (en el Keys/API keys UI o en `.env.local`) y `NOTIFY_EMAIL` (default: `manuelcandoliobregon@gmail.com`), cada mensaje que cae en la bandeja te llega también a tu Gmail — con el contacto para responder en un toque. Sin la key, todo sigue igual y la bandeja es la fuente. Se usa la API REST de Resend con `https` nativo: cero dependencias nuevas, funciona en Termux.
 
 > El botón principal del formulario abre WhatsApp con el mensaje ya escrito. El botón secundario guarda en la bandeja local (útil si el visitante no usa WhatsApp).
 
@@ -42,7 +44,7 @@ El hosting corre: `npm install` + `vite build` → `dist/`. En producción el si
 node scripts/test.js
 ```
 
-Checks (58 en total): sintaxis, contenido, paridad de claves i18n (es/en/pt), build con Vite, y un servidor real efímero que prueba health, estáticos, POST con límite de frecuencia, XSS, acceso solo-localhost, 404, path traversal, byte nulo y que `data/`, `server.js`, `.env` y `scripts/` **nunca** se sirvan como archivos estáticos.
+Checks (69 en total): sintaxis, contenido, paridad de claves i18n (es/en/pt), build con Vite, y un servidor real efímero que prueba health, estáticos, POST con límite de frecuencia, XSS, acceso solo-localhost, 404, path traversal, byte nulo y que `data/`, `server.js`, `.env` y `scripts/` **nunca** se sirvan como archivos estáticos.
 
 ## Estructura
 

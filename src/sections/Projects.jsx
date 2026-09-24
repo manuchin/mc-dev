@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useI18n } from "../i18n.jsx";
 import { useReveal } from "../hooks/use-reveal.js";
+import ProjectModal from "../components/ProjectModal.jsx";
 
 /* Ejemplos (ref. Byron + TICMODE): malla de 3 columnas con mockups
    multidispositivo dibujados en CSS puro — cero imágenes externas,
@@ -53,13 +55,15 @@ function Mockup({ variant }) {
   );
 }
 
-function ProjectCard({ p, t }) {
+function ProjectCard({ p, t, onOpen }) {
   const ref = useReveal();
   return (
-    <a
+    <button
       ref={ref}
-      href="#contacto"
-      className="rv group flex flex-col rounded-2xl border border-border bg-card p-6 pb-7 shadow-lg shadow-black/30 no-underline transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_36px_rgba(56,189,248,0.14)]"
+      type="button"
+      onClick={onOpen}
+      aria-haspopup="dialog"
+      className="rv group flex cursor-pointer flex-col rounded-2xl border border-border bg-card p-6 pb-7 text-left shadow-lg shadow-black/30 transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_36px_rgba(56,189,248,0.14)]"
     >
       <div className="flex items-baseline justify-between gap-4">
         <h3 className="m-0 font-sans text-[20px] font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover:text-primary">
@@ -77,7 +81,7 @@ function ProjectCard({ p, t }) {
           →
         </span>
       </span>
-    </a>
+    </button>
   );
 }
 
@@ -85,6 +89,7 @@ export default function Projects() {
   const { t } = useI18n();
   const head = useReveal();
   const intro = useReveal();
+  const [open, setOpen] = useState(null);
 
   return (
     <section id="ejemplos" className="py-20 sm:py-28 lg:py-32">
@@ -103,10 +108,11 @@ export default function Projects() {
 
         <div className="grid gap-5 lg:grid-cols-3">
           {PROJECTS.map((p) => (
-            <ProjectCard key={p.k} p={p} t={t} />
+            <ProjectCard key={p.k} p={p} t={t} onOpen={() => setOpen(p)} />
           ))}
         </div>
       </div>
+      {open && <ProjectModal p={open} onClose={() => setOpen(null)} />}
     </section>
   );
 }
