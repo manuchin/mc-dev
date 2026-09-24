@@ -66,7 +66,7 @@ export default function Hero() {
             </Button>
           </div>
 
-          {/* Terminal: el flujo real de la demo */}
+          {/* Mini-historia: cómo arranca un proyecto (en vez de comandos que nadie entiende) */}
           <div ref={term} className="rv mx-auto mt-14 max-w-2xl sm:mt-16">
             <div
               className="relative rounded-2xl bg-card px-5 py-4 text-left shadow-xl shadow-black/40
@@ -79,24 +79,23 @@ export default function Hero() {
                   <span className="h-2.5 w-2.5 rounded-full bg-[#2a2e31]" />
                   <span className="h-2.5 w-2.5 rounded-full bg-primary/50" />
                 </span>
-                <span className="font-mono text-[11px] text-faint">terminal · localhost:4173</span>
+                <span className="font-mono text-[11px] text-faint">{t("hero.term.cap")}</span>
               </div>
               <div className="font-mono text-[12.5px] leading-6 sm:text-[13.5px]">
                 <p className="term-line tl1 m-0">
-                  <span className="text-primary">$</span> <span className="text-foreground">git pull</span>
-                  <span className="text-faint"> Already up to date.</span>
+                  <span className="text-primary">vos:</span> <span className="text-foreground">{t("hero.term.q")}</span>
                 </p>
-                <p className="term-line tl2 m-0">
-                  <span className="text-primary">$</span> <span className="text-foreground">node server.js</span>
+                <p className="term-line tl2 m-0 text-muted-foreground">
+                  <span className="text-primary">manuel:</span> {t("hero.term.a1")}
                 </p>
                 <p className="term-line tl3 m-0 text-muted-foreground">
-                  Portfolio corriendo en http://localhost:4173
+                  <span className="text-primary">manuel:</span> {t("hero.term.a2")}
                 </p>
                 <p className="term-line tl4 m-0 text-muted-foreground">
-                  Bandeja de mensajes: http://localhost:4173/bandeja
+                  <span className="text-primary">manuel:</span> {t("hero.term.a3")}
                 </p>
                 <p className="m-0">
-                  <span className="text-primary">$</span> <span className="term-cursor inline-block h-[14px] w-[7px] translate-y-[2px] bg-primary/80" />
+                  <span className="text-primary">→</span> <span className="term-cursor inline-block h-[14px] w-[7px] translate-y-[2px] bg-primary/80" />
                 </p>
               </div>
             </div>
