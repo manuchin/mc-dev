@@ -73,6 +73,11 @@ ok("sin emojis visibles en los fuentes", !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}
 ok("meta viewport", /name="viewport"/.test(html));
 ok("reduced-motion respetado", /prefers-reduced-motion/.test(fs.readFileSync(path.join(ROOT, "src", "index.css"), "utf8")));
 
+/* anti-chamuyo: nada de promesas que no podemos cumplir */
+ok("sin chamuyo: no dice 'hecho a mano'", !/HECHO A MANO/i.test(i18nSrc));
+ok("sin chamuyo: no promete 'sin plantillas'", !/SIN PLANTILLAS/i.test(i18nSrc) && !/SEM TEMPLATES/i.test(i18nSrc));
+ok("footer honesto (ES/EN/PT)", /SITIO REAL, EN FUNCIONAMIENTO/.test(i18nSrc) && /A REAL SITE, RUNNING/.test(i18nSrc) && /SITE DE VERDADE/.test(i18nSrc));
+
 /* ---------- 3. paridad i18n ---------- */
 section("3. Paridad de claves i18n");
 function extractDict(src, lang) {
@@ -169,7 +174,7 @@ function req(method, p, body) {
           const text = Buffer.concat(chunks).toString("utf8");
           let parsed = null;
           try { parsed = JSON.parse(text); } catch {}
-          resolve({ status: res.statusCode, text, json: parsed });
+          resolve({ status: res.statusCode, text, json: parsed, headers: res.headers });
         });
       }
     );
@@ -252,6 +257,23 @@ waitReady
 
       const trav = await req("GET", "/..%2F..%2F..%2Fetc%2Fpasswd");
       ok("path traversal bloqueado", trav.status === 403 || trav.status === 404);
+
+      /* ---- blindaje: nada sensible se sirve como archivo estático ---- */
+      const df = await req("GET", "/data/feedback.json");
+      ok("la bandeja cruda (data/) NO se sirve", df.status === 403);
+      const sv = await req("GET", "/server.js");
+      ok("server.js NO se sirve", sv.status === 403);
+      const env = await req("GET", "/.env");
+      ok(".env NO se sirve", env.status === 403 || env.status === 404);
+      const scr = await req("GET", "/scripts/test.js");
+      ok("scripts/ NO se sirve", scr.status === 403);
+      const nb = await req("GET", "/index.html%00.svg");
+      ok("byte nulo rechazado", nb.status === 400);
+
+      /* ---- cabeceras de seguridad en todas las respuestas ---- */
+      ok("X-Content-Type-Options en /", idx.headers["x-content-type-options"] === "nosniff");
+      ok("X-Frame-Options en /", idx.headers["x-frame-options"] === "DENY");
+
     } catch (e) {
       ok("bloque de tests del servidor", false, String(e && e.message));
     } finally {

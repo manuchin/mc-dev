@@ -1,14 +1,20 @@
 #!/usr/bin/env node
 /* =====================================================================
    Servidor estático + bandeja de mensajes, sin dependencias.
-   - Sirve el portfolio (index.html) y archivos estáticos.
+
+   - Sirve dist/ (build de Vite) si existe; si no, el index.html raíz.
+     En Termux alcanza con git pull + node server.js: dist/ está versionado.
    - POST /api/feedback   → guarda mensajes de visitantes (data/feedback.json)
    - GET  /api/feedback   → lista los mensajes (SOLO desde localhost)
    - GET  /bandeja        → bandeja legible (SOLO desde localhost)
    - GET  /api/health     → check rápido para scripts
 
-   Uso: node server.js   (usa process.env.PORT o 4173)
-   Base de datos: data/feedback.json — un archivo JSON simple, cero deps.
+   Blindaje (probado en scripts/test.js):
+   - Cabeceras de seguridad en todas las respuestas.
+   - data/, .env*, server.js, configs y scripts/ NUNCA se sirven como
+     archivos estáticos (la bandeja se lee por /bandeja, solo localhost).
+   - Byte nulo, traversal y métodos raros rechazados.
+   - Base de datos con tope de 500 mensajes y escritura atómica.
    ===================================================================== */
 "use strict";
 
@@ -22,9 +28,9 @@ const PORT = Number(process.env.PORT) || 4173;
 const HOST = "0.0.0.0";
 const DATA_FILE = process.env.FEEDBACK_FILE || path.join(ROOT, "data", "feedback.json");
 const BODY_LIMIT = 10 * 1024; // 10 KB
+const MAX_MESSAGES = 500;
 
-/* Sirve dist/ (build de Vite) si existe; si no, el index.html raíz.
-   Así en Termux alcanza con git pull + node server.js: sin build. */
+/* Sirve dist/ (build de Vite) si existe; si no, el index.html raíz. */
 const STATIC_ROOT = fs.existsSync(path.join(ROOT, "dist", "index.html"))
   ? path.join(ROOT, "dist")
   : ROOT;
@@ -39,6 +45,34 @@ const MIME = {
   ".json": "application/json; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
 };
+
+/* Cabeceras de seguridad en TODAS las respuestas. */
+const SEC = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+};
+
+/* ---------- archivos que nunca se sirven ---------- */
+const BLOCKED_EXACT = new Set([
+  "server.js",
+  "package.json",
+  "package-lock.json",
+  "bun.lock",
+  "components.json",
+  "postcss.config.cjs",
+  "tailwind.config.js",
+  "vite.config.mjs",
+  "readme.md",
+]);
+const BLOCKED_PREFIX = ["data/", "scripts/", ".git/"];
+
+function isBlockedRepoPath(rel) {
+  const norm = rel.replace(/\\/g, "/").toLowerCase();
+  if (norm.split("/").some((part) => part.startsWith("."))) return true; // .env, .env.local, .gitignore, ...
+  if (BLOCKED_EXACT.has(norm)) return true;
+  return BLOCKED_PREFIX.some((p) => norm.startsWith(p));
+}
 
 /* ---------- storage: lista de mensajes en JSON ---------- */
 function loadFeedback() {
@@ -75,10 +109,7 @@ function tooManyRequests(ip) {
 
 /* ---------- helpers ---------- */
 function json(res, code, obj) {
-  res.writeHead(code, {
-    "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store",
-  });
+  res.writeHead(code, Object.assign({ "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }, SEC));
   res.end(JSON.stringify(obj));
 }
 
@@ -157,6 +188,15 @@ const server = http.createServer(async (req, res) => {
     json(res, 400, { ok: false, error: "bad request" });
     return;
   }
+  if (urlPath.indexOf("\0") !== -1) {
+    json(res, 400, { ok: false, error: "bad request" });
+    return;
+  }
+  urlPath = path.posix.normalize(urlPath);
+  if (urlPath.startsWith("..") || urlPath.includes("../")) {
+    json(res, 403, { ok: false, error: "forbidden" });
+    return;
+  }
 
   const ip = req.socket.remoteAddress || "?";
 
@@ -183,6 +223,7 @@ const server = http.createServer(async (req, res) => {
       };
       const list = loadFeedback();
       list.push(entry);
+      if (list.length > MAX_MESSAGES) list.splice(0, list.length - MAX_MESSAGES);
       saveFeedback(list);
       json(res, 201, { ok: true, id: entry.id });
     } catch {
@@ -199,7 +240,7 @@ const server = http.createServer(async (req, res) => {
     }
     const list = loadFeedback();
     if (urlPath === "/bandeja") {
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+      res.writeHead(200, Object.assign({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" }, SEC));
       res.end(inboxHtml(list));
     } else {
       json(res, 200, { ok: true, count: list.length, items: list.reverse() });
@@ -231,7 +272,12 @@ const server = http.createServer(async (req, res) => {
   if (!filePath) {
     const inRepo = path.normalize(path.join(ROOT, urlPath));
     if (!inRepo.startsWith(ROOT)) {
-      res.writeHead(403).end("Forbidden");
+      res.writeHead(403, SEC).end("Forbidden");
+      return;
+    }
+    const rel = path.relative(ROOT, inRepo);
+    if (isBlockedRepoPath(rel)) {
+      res.writeHead(403, SEC).end("Forbidden");
       return;
     }
     if (fs.existsSync(inRepo)) {
@@ -239,25 +285,25 @@ const server = http.createServer(async (req, res) => {
     }
   }
   if (!filePath) {
-    res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("404 — no encontrado");
+    res.writeHead(404, Object.assign({ "Content-Type": "text/plain; charset=utf-8" }, SEC)).end("404 — no encontrado");
     return;
   }
 
   fs.readFile(filePath, (readErr, data) => {
     if (readErr) {
-      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" }).end("404 — no encontrado");
+      res.writeHead(404, Object.assign({ "Content-Type": "text/plain; charset=utf-8" }, SEC)).end("404 — no encontrado");
       return;
     }
     const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, {
+    res.writeHead(200, Object.assign({
       "Content-Type": MIME[ext] || "application/octet-stream",
       "Cache-Control": "no-cache",
-    });
-    res.end(data);
+    }, SEC));
+    res.end(req.method === "HEAD" ? undefined : data);
   });
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`Portfolio corriendo en http://${HOST}:${PORT}`);
+  console.log(`Portfolio corriendo en http://localhost:${PORT}`);
   console.log(`Bandeja de mensajes: http://localhost:${PORT}/bandeja (solo en tu máquina)`);
 });

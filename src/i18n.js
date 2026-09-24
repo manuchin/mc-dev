@@ -47,7 +47,7 @@ export const I18N = {
     "foot.brand": "MANUEL CANDOLI · CÓRDOBA",
     "foot.claim": "Páginas, tiendas y sistemas web para negocios reales — hechos desde Córdoba, funcionando en internet.",
     "foot.navh": "Secciones",
-    "foot.made": "HECHO A MANO — SIN PLANTILLAS NI ATAJOS",
+    "foot.made": "SITIO REAL, EN FUNCIONAMIENTO — ESCRIBIME Y TE RESPONDO YO",
     "foot.top": "VOLVER ARRIBA ↑"
   },
   en: {
@@ -98,7 +98,7 @@ export const I18N = {
     "foot.brand": "MANUEL CANDOLI · CÓRDOBA",
     "foot.claim": "Websites, stores and web systems for real businesses — built in Córdoba, live on the internet.",
     "foot.navh": "Sections",
-    "foot.made": "HANDMADE — NO TEMPLATES, NO SHORTCUTS",
+    "foot.made": "A REAL SITE, RUNNING RIGHT NOW — MESSAGE ME AND I'LL REPLY MYSELF",
     "foot.top": "BACK TO TOP ↑"
   },
   pt: {
@@ -149,7 +149,7 @@ export const I18N = {
     "foot.brand": "MANUEL CANDOLI · CÓRDOBA",
     "foot.claim": "Sites, lojas e sistemas web para negócios reais — feitos em Córdoba, funcionando na internet.",
     "foot.navh": "Seções",
-    "foot.made": "FEITO À MÃO — SEM TEMPLATES, SEM ATALHOS",
+    "foot.made": "SITE DE VERDADE, RODANDO AGORA — ME ESCREVE E EU MESMO RESPONDO",
     "foot.top": "VOLTAR AO TOPO ↑"
   },
 };

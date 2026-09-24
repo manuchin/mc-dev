@@ -103,13 +103,13 @@ export default function Contact() {
         </p>
         <p className="mt-6 max-w-[44ch] text-lg leading-relaxed text-muted-foreground">{t("c.note")}</p>
 
-        <div className="rv relative mt-10 overflow-hidden rounded-2xl bg-card p-6 shadow-xl shadow-black/40 sm:p-10">
+        <div ref={formRef} className="rv relative mt-10 overflow-hidden rounded-2xl bg-card p-6 shadow-xl shadow-black/40 sm:p-10">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -bottom-20 left-1/2 h-56 w-[460px] max-w-[90%] -translate-x-1/2 translate-y-1/2 rounded-full border-[20px] border-sky-500/50 blur-3xl"
           />
 
-        <form ref={formRef} noValidate onSubmit={sendWhatsApp} className="relative mx-auto grid max-w-[640px] gap-3 text-left">
+        <form noValidate onSubmit={sendWhatsApp} className="relative mx-auto grid max-w-[640px] gap-3 text-left">
           <label htmlFor="cf-name" className="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
             {t("form.name")}
           </label>
