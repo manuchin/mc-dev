@@ -114,3 +114,22 @@
 @keyframes term-l3 { 0%, 26% { opacity: 0; } 28%, 92% { opacity: 1; } 95%, 100% { opacity: 0; } }
 @keyframes term-l4 { 0%, 40% { opacity: 0; } 42%, 92% { opacity: 1; } 95%, 100% { opacity: 0; } }
 @keyframes term-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+/* Pop-up "quiero algo así": aparece con fade + scale suave. */
+.modal-backdrop {
+  animation: modal-fade 0.22s ease both;
+}
+.modal-card {
+  animation: modal-pop 0.26s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes modal-pop {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal-card { animation: none; }
+}

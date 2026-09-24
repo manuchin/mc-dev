@@ -17,6 +17,7 @@ export default function Contact() {
   const rowsRef = useReveal();
 
   const [name, setName] = useState("");
+  const [reply, setReply] = useState("");
   const [msg, setMsg] = useState("");
   const [sending, setSending] = useState(false);
 
@@ -36,7 +37,7 @@ export default function Contact() {
       const res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), message: msg.trim(), lang }),
+        body: JSON.stringify({ name: name.trim(), reply: reply.trim(), message: msg.trim(), lang }),
       });
       /* Validamos que la respuesta sea JSON del server, no un HTML de fallback:
          en un hosting estático sin API esto cae al toast de fallo honesto. */
@@ -44,7 +45,7 @@ export default function Contact() {
       if (!res.ok || ct.indexOf("application/json") === -1) throw new Error("no api");
       const data = await res.json();
       if (!data || data.ok !== true) throw new Error("bad payload");
-      toast(t("toast.saved"));
+      toast(t(reply.trim() ? "toast.saved" : "form.noReply"));
       setMsg("");
     } catch (err) {
       toast(t("toast.savefail"));
@@ -121,6 +122,30 @@ export default function Contact() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base text-foreground outline-none transition-all focus:border-primary focus:shadow-[0_0_20px_rgba(56,189,248,0.12)]"
+          />
+          <label htmlFor="cf-reply" className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
+            {t("form.reply")}
+          </label>
+          <input
+            id="cf-reply"
+            type="text"
+            maxLength={120}
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
+            placeholder={t("form.replyPh")}
+            className="rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base text-foreground outline-none transition-all placeholder:text-faint focus:border-primary focus:shadow-[0_0_20px_rgba(56,189,248,0.12)]"
+          />
+          <label htmlFor="cf-reply" className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
+            {t("form.reply")}
+          </label>
+          <input
+            id="cf-reply"
+            type="text"
+            maxLength={120}
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
+            placeholder={t("form.replyPh")}
+            className="rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base text-foreground outline-none transition-all placeholder:text-faint focus:border-primary focus:shadow-[0_0_20px_rgba(56,189,248,0.12)]"
           />
           <label htmlFor="cf-msg" className="mt-1 font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
             {t("form.msg")}

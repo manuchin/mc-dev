@@ -55,6 +55,8 @@ section("2. Contenido de los fuentes (src/)");
 const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 const i18nSrc = fs.readFileSync(path.join(ROOT, "src", "i18n.js"), "utf8");
 const contactSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Contact.jsx"), "utf8");
+const projectsSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Projects.jsx"), "utf8");
+const modalSrc = fs.readFileSync(path.join(ROOT, "src", "components", "ProjectModal.jsx"), "utf8");
 const headerSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Header.jsx"), "utf8");
 const i18nProviderSrc = fs.readFileSync(path.join(ROOT, "src", "i18n.jsx"), "utf8");
 
@@ -64,8 +66,10 @@ ok("hay switcher de idioma", /data-lang=\{l\}/.test(headerSrc) && /LANGS|langs/.
 ok("auto-detección de idioma del navegador", /navigator\.languages/.test(i18nSrc));
 ok("persistencia del idioma (localStorage)", /localStorage\.setItem\("mc-lang"/.test(i18nProviderSrc));
 ok("formulario de contacto presente", /cf-msg/.test(contactSrc));
+ok("campo de contacto para responder (cf-reply / pm-reply)", /cf-reply/.test(contactSrc) && /pm-reply/.test(modalSrc));
 ok("botón enviar por WhatsApp", /wa\.me\/" \+ WA \+ "\?text="/.test(contactSrc));
 ok("botón guardar sin WhatsApp (POST /api/feedback)", /fetch\("\/api\/feedback"/.test(contactSrc));
+ok("toast avisa si no dejaron contacto", /form\.noReply/.test(contactSrc) && /form\.noReply/.test(modalSrc));
 ok("email correcto", /manuelcandoliobregon@gmail\.com/.test(contactSrc));
 ok("WhatsApp correcto", /5493513805496/.test(contactSrc));
 ok("Instagram correcto", /instagram\.com\/manucandoli/.test(contactSrc));
@@ -77,6 +81,14 @@ ok("reduced-motion respetado", /prefers-reduced-motion/.test(fs.readFileSync(pat
 ok("sin chamuyo: no dice 'hecho a mano'", !/HECHO A MANO/i.test(i18nSrc));
 ok("sin chamuyo: no promete 'sin plantillas'", !/SIN PLANTILLAS/i.test(i18nSrc) && !/SEM TEMPLATES/i.test(i18nSrc));
 ok("footer honesto (ES/EN/PT)", /SITIO REAL, EN FUNCIONAMIENTO/.test(i18nSrc) && /A REAL SITE, RUNNING/.test(i18nSrc) && /SITE DE VERDADE/.test(i18nSrc));
+
+/* pop-up de ejemplos: tocar un card abre modal, no baja de golpe a contacto */
+ok("los cards de ejemplos abren pop-up", /ProjectModal/.test(projectsSrc));
+ok("los cards ya NO bajan a #contacto", !/href="#contacto"/.test(projectsSrc));
+ok("pop-up precarga el mensaje del ejemplo", /p\.k \+ "\.msg"/.test(modalSrc));
+ok("pop-up manda por WhatsApp", /wa\.me\/" \+ WA \+ "\?text="/.test(modalSrc));
+ok("pop-up también guarda sin WhatsApp", /fetch\("\/api\/feedback"/.test(modalSrc));
+ok("pop-up se cierra con Esc", /Escape/.test(modalSrc));
 
 /* ---------- 3. paridad i18n ---------- */
 section("3. Paridad de claves i18n");
@@ -239,6 +251,23 @@ waitReady
 
       const inbox = await req("GET", "/bandeja");
       ok("GET /bandeja desde localhost → 200 HTML", inbox.status === 200 && /Bandeja/.test(inbox.text));
+
+      /* ---- circuito de respuesta: contacto se guarda y la bandeja da botón ---- */
+      const withReply = await req("POST", "/api/feedback", {
+        name: "Sofía", reply: "sofia@mail.com", message: "Quiero un turno web", lang: "es",
+      });
+      ok("POST con reply → 201", withReply.status === 201);
+      const waEntry = await req("POST", "/api/feedback", {
+        reply: "3515555555", message: "Whatsapp de prueba", lang: "es",
+      });
+      ok("POST con WhatsApp → 201", waEntry.status === 201);
+      const stored = JSON.parse(fs.readFileSync(tmpData, "utf8"));
+      const last = stored[stored.length - 1];
+      ok("el reply se guardó en la base", last && last.reply === "3515555555");
+      const inbox2 = await req("GET", "/bandeja");
+      ok("bandeja arma botón de email", inbox2.status === 200 && inbox2.text.includes("mailto:sofia@mail.com"));
+      ok("bandeja arma link de WhatsApp con país", inbox2.status === 200 && inbox2.text.includes("https://wa.me/543515555555"));
+      ok("bandeja marca mensaje sin contacto", inbox2.status === 200 && inbox2.text.includes("Sin contacto"));
 
       /* límite de frecuencia: 10 por 15 min, ya van 3 */
       let lastStatus = 201;
