@@ -75,6 +75,11 @@ ok("WhatsApp correcto", /5493513805496/.test(contactSrc));
 ok("Instagram correcto", /instagram\.com\/manucandoli/.test(contactSrc));
 ok("sin emojis visibles en los fuentes", !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(contactSrc + headerSrc));
 ok("meta viewport", /name="viewport"/.test(html));
+ok("datos estructurados de Persona (JSON-LD)", /application\/ld\+json/.test(html) && /"@type":\s*"Person"/.test(html));
+ok("meta robots index, follow", /name="robots"/.test(html));
+ok("og:locale con alternates", /og:locale" content="es_AR"/.test(html) && /og:locale:alternate/.test(html));
+ok("monograma circular en el hero", /rounded-full.*MC|MC.*rounded-full/s.test(fs.readFileSync(path.join(ROOT, "src", "sections", "Hero.jsx"), "utf8")));
+ok("sin coordenadas decimales en la UI", !/31\.4°S/.test(html) && !/31\.4°S/.test(fs.readFileSync(path.join(ROOT, "src", "App.jsx"), "utf8")));
 ok("reduced-motion respetado", /prefers-reduced-motion/.test(fs.readFileSync(path.join(ROOT, "src", "index.css"), "utf8")));
 
 /* anti-chamuyo: nada de promesas que no podemos cumplir */
@@ -89,6 +94,20 @@ ok("pop-up precarga el mensaje del ejemplo", /p\.k \+ "\.msg"/.test(modalSrc));
 ok("pop-up manda por WhatsApp", /wa\.me\/" \+ WA \+ "\?text="/.test(modalSrc));
 ok("pop-up también guarda sin WhatsApp", /fetch\("\/api\/feedback"/.test(modalSrc));
 ok("pop-up se cierra con Esc", /Escape/.test(modalSrc));
+
+/* QUIERO UNO ASÍ de servicios: abre el mismo pop-up con la clave correcta.
+   Regresión: pasaba c.t ("svc3.t") y el pop-up buscaba svc3.t.t (texto crudo). */
+const servicesSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Services.jsx"), "utf8");
+ok("desglose de servicios abre el pop-up", /ProjectModal/.test(servicesSrc));
+ok("servicios pasa la clave correcta (svc1..svc4)", /setOpen\(c\.k\)/.test(servicesSrc) && !/setOpen\(c\.t\)/.test(servicesSrc));
+ok("desglose usa claves existentes (inca/lib/lic)", /\.inca/.test(servicesSrc) && !/\.inc"\)/.test(servicesSrc));
+ok("contacto no duplica el campo de respuesta", (contactSrc.match(/id="cf-reply"/g) || []).length === 1);
+
+/* modo claro/oscuro: anti-flash + toggle + colores por variables */
+ok("anti-flash de tema en index.html", /mc-theme/.test(html) && /prefers-color-scheme/.test(html));
+ok("toggle de tema en el header", /mc-theme/.test(headerSrc) && /theme\.aria/.test(headerSrc));
+ok("header usa fondo dependiente del tema", /var\(--header-bg\)/.test(headerSrc));
+ok("tokens de tema claro definidos", /html\.light/.test(fs.readFileSync(path.join(ROOT, "src", "index.css"), "utf8")));
 
 /* ---------- 3. paridad i18n ---------- */
 section("3. Paridad de claves i18n");
@@ -174,11 +193,11 @@ const child = spawn(process.execPath, [path.join(ROOT, "server.js")], {
   stdio: "pipe",
 });
 
-function req(method, p, body) {
+function req(method, p, body, extraHeaders) {
   return new Promise((resolve, reject) => {
     const data = body ? Buffer.from(JSON.stringify(body)) : null;
     const r = http.request(
-      { host: "127.0.0.1", port: PORT, path: p, method, headers: data ? { "Content-Type": "application/json" } : {} },
+      { host: "127.0.0.1", port: PORT, path: p, method, headers: Object.assign({}, extraHeaders, data ? { "Content-Type": "application/json" } : {}) },
       (res) => {
         const chunks = [];
         res.on("data", (c) => chunks.push(c));
@@ -283,6 +302,14 @@ waitReady
          forzar un remote externo en local; documentado). */
       const nf = await req("GET", "/no-existe.jpg");
       ok("404 en archivo inexistente", nf.status === 404);
+
+      /* ---- 404 con página estilizada (como los portfolios pro) ---- */
+      const nfHtml = await req("GET", "/pagina-inexistente", null, { Accept: "text/html" });
+      ok(
+        "404 HTML estilizado para navegadores",
+        nfHtml.status === 404 && nfHtml.text.includes("404") && nfHtml.text.includes("Volver al inicio")
+      );
+      ok("404 JSON/plano para no-navegadores", nf.status === 404 && !nf.text.includes("<html"));
 
       const trav = await req("GET", "/..%2F..%2F..%2Fetc%2Fpasswd");
       ok("path traversal bloqueado", trav.status === 403 || trav.status === 404);

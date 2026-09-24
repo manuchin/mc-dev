@@ -7,10 +7,10 @@ import ProjectModal from "../components/ProjectModal.jsx";
    desglosa qué incluye el servicio en la misma ficha: nada de bajar
    de golpe a contacto — el CTA real aparece adentro del desglose. */
 const CARDS = [
-  { n: "01", t: "svc1.t", d: "svc1.d" },
-  { n: "02", t: "svc2.t", d: "svc2.d" },
-  { n: "03", t: "svc3.t", d: "svc3.d" },
-  { n: "04", t: "svc4.t", d: "svc4.d" },
+  { n: "01", k: "svc1", t: "svc1.t", d: "svc1.d" },
+  { n: "02", k: "svc2", t: "svc2.t", d: "svc2.d" },
+  { n: "03", k: "svc3", t: "svc3.t", d: "svc3.d" },
+  { n: "04", k: "svc4", t: "svc4.t", d: "svc4.d" },
 ];
 
 function ServiceCard({ c, t, onOpen }) {
@@ -20,7 +20,7 @@ function ServiceCard({ c, t, onOpen }) {
   return (
     <div
       className={
-        "group relative flex min-h-[240px] flex-col rounded-2xl border bg-card p-6 shadow-lg shadow-black/30 transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_34px_rgba(56,189,248,0.14)] " +
+        "group relative flex min-h-[240px] flex-col rounded-2xl border bg-card p-6 card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_34px_var(--glow)] " +
         (open ? "border-primary/60" : "border-border")
       }
     >
@@ -50,15 +50,21 @@ function ServiceCard({ c, t, onOpen }) {
       </button>
 
       <div id={openId} hidden={!open} className="border-t border-border pt-4">
-        <p className="m-0 text-[13.5px] leading-relaxed text-muted-foreground">{t(c.t + ".inc")}</p>
-        <ul className="m-0 mt-3 list-none space-y-1.5 p-0">
-          {["a", "b", "c"].map((s) => (
-            <li key={s} className="flex items-start gap-2 text-[13.5px] leading-snug text-foreground">
-              <span aria-hidden="true" className="mt-[2px] text-primary">+</span>
-              {t(c.t + ".li" + s)}
-            </li>
+        <dl className="m-0 space-y-2.5">
+          {[
+            { l: ".inca", v: ".lia" },
+            { l: ".lib", v: ".lib2" },
+            { l: ".lic", v: ".lic2" },
+          ].map((row) => (
+            <div key={row.l}>
+              <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-faint">{t(c.t + row.l)}</dt>
+              <dd className="m-0 mt-0.5 flex items-start gap-2 text-[13.5px] leading-snug text-foreground">
+                <span aria-hidden="true" className="mt-[2px] text-primary">+</span>
+                {t(c.t + row.v)}
+              </dd>
+            </div>
           ))}
-        </ul>
+        </dl>
         <button
           type="button"
           onClick={onOpen}
@@ -95,7 +101,7 @@ export default function Services() {
 
         <div ref={grid} className="rv grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
           {CARDS.map((c) => (
-            <ServiceCard key={c.n} c={c} t={t} onOpen={() => setOpen(c.t)} />
+            <ServiceCard key={c.n} c={c} t={t} onOpen={() => setOpen(c.k)} />
           ))}
         </div>
 

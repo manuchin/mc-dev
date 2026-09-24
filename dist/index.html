@@ -4,15 +4,49 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#0a0a0a" />
-<meta name="color-scheme" content="dark" />
+<meta name="color-scheme" content="dark light" />
+<script>
+  /* Anti-flash: aplica el tema antes del primer render (default: automático). */
+  (function () {
+    var mode = "auto";
+    try {
+      var saved = localStorage.getItem("mc-theme");
+      if (saved === "light" || saved === "dark" || saved === "auto") mode = saved;
+    } catch (e) {}
+    var dark = mode === "dark" || (mode === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    var el = document.documentElement;
+    el.classList.add(dark ? "dark" : "light");
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", dark ? "#0a0a0a" : "#f7f7f5");
+  })();
+</script>
 <title>Manuel Candoli — Construyo páginas web que funcionan · Córdoba</title>
 <meta name="description" content="Manuel Candoli hace páginas web, tiendas online y sistemas a medida para tu negocio. Rápido, claro y funcionando en internet. Córdoba, Argentina." />
 <meta property="og:title" content="Manuel Candoli — Páginas web que funcionan" />
 <meta property="og:description" content="Páginas web, tiendas online, sistemas a medida y automatizaciones con IA. Contás qué necesitás, yo lo construyo." />
 <meta property="og:type" content="website" />
+<meta property="og:locale" content="es_AR" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta property="og:locale:alternate" content="pt_BR" />
+<meta name="twitter:card" content="summary" />
+<meta name="robots" content="index, follow" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Manuel Candoli",
+  "url": "https://mc-dev.freebuff.app",
+  "description": "Hago páginas web, tiendas online y sistemas a medida para negocios. Córdoba, Argentina.",
+  "jobTitle": "Desarrollador web freelance",
+  "email": "mailto:manuelcandoliobregon@gmail.com",
+  "telephone": "+54 9 351 380 5496",
+  "address": { "@type": "PostalAddress", "addressLocality": "Córdoba", "addressCountry": "AR" },
+  "sameAs": ["https://instagram.com/manucandoli", "https://wa.me/5493513805496"]
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0a0a'/%3E%3Ctext x='32' y='43' font-size='30' font-family='Arial,sans-serif' fill='%2338bdf8' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E" />
-  <script type="module" crossorigin src="/assets/index-CIh4TOKM.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-HA6UTJYA.css">
+  <script type="module" crossorigin src="/assets/index-CSYYlRSh.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Bs6Xufk_.css">
 </head>
 <body>
 <div id="root"></div>

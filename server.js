@@ -242,6 +242,22 @@ function inboxHtml(list) {
     "</ul></div></body></html>";
 }
 
+function notFoundHtml() {
+  return "<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\">" +
+    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" +
+    "<title>404 — Manuel Candoli</title>" +
+    "<style>body{margin:0;background:#0a0a0a;color:#f2f4f6;font-family:Arial,sans-serif;" +
+    "display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center;padding:24px}" +
+    "h1{font-size:64px;margin:0;color:#38bdf8}p{color:#9aa5af;font-size:18px;margin:14px 0 26px}" +
+    "a{display:inline-block;background:#38bdf8;color:#04121b;font-weight:bold;padding:12px 22px;" +
+    "border-radius:8px;text-decoration:none}a:hover{filter:brightness(1.1)}</style></head>" +
+    "<body><div>" +
+    "<h1>404</h1>" +
+    "<p>Esta página no existe — pero la tuya puede. Escribime y la hacemos.</p>" +
+    "<a href=\"/\">Volver al inicio</a>" +
+    "</div></body></html>";
+}
+
 function escapeHtml(s) {
   return String(s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -356,13 +372,21 @@ const server = http.createServer(async (req, res) => {
     }
   }
   if (!filePath) {
-    res.writeHead(404, Object.assign({ "Content-Type": "text/plain; charset=utf-8" }, SEC)).end("404 — no encontrado");
+    if (req.method === "GET" && (req.headers.accept || "").includes("text/html")) {
+      res.writeHead(404, Object.assign({ "Content-Type": "text/html; charset=utf-8" }, SEC)).end(notFoundHtml());
+    } else {
+      res.writeHead(404, Object.assign({ "Content-Type": "text/plain; charset=utf-8" }, SEC)).end("404 — no encontrado");
+    }
     return;
   }
 
   fs.readFile(filePath, (readErr, data) => {
     if (readErr) {
-      res.writeHead(404, Object.assign({ "Content-Type": "text/plain; charset=utf-8" }, SEC)).end("404 — no encontrado");
+      if (req.method === "GET" && (req.headers.accept || "").includes("text/html")) {
+        res.writeHead(404, Object.assign({ "Content-Type": "text/html; charset=utf-8" }, SEC)).end(notFoundHtml());
+      } else {
+        res.writeHead(404, Object.assign({ "Content-Type": "text/plain; charset=utf-8" }, SEC)).end("404 — no encontrado");
+      }
       return;
     }
     const ext = path.extname(filePath).toLowerCase();
