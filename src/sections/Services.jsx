@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useI18n } from "../i18n.jsx";
 import { useReveal } from "../hooks/use-reveal.js";
+import ProjectModal from "../components/ProjectModal.jsx";
 
 /* Servicios como fichas redondeadas (ref. BTO Digital). El "ver más"
    desglosa qué incluye el servicio en la misma ficha: nada de bajar
@@ -12,7 +13,7 @@ const CARDS = [
   { n: "04", t: "svc4.t", d: "svc4.d" },
 ];
 
-function ServiceCard({ c, t }) {
+function ServiceCard({ c, t, onOpen }) {
   const [open, setOpen] = useState(false);
   const openId = "svc-panel-" + c.n;
 
@@ -58,13 +59,15 @@ function ServiceCard({ c, t }) {
             </li>
           ))}
         </ul>
-        <a
-          href="#contacto"
-          className="mt-4 inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-primary no-underline transition-colors hover:text-foreground"
+        <button
+          type="button"
+          onClick={onOpen}
+          aria-haspopup="dialog"
+          className="mt-4 inline-flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 font-mono text-[10.5px] uppercase tracking-[0.16em] text-primary transition-colors hover:text-foreground"
         >
           {t("card.cta")}
           <span aria-hidden="true" className="inline-block transition-transform duration-300 hover:translate-x-1">→</span>
-        </a>
+        </button>
       </div>
     </div>
   );
@@ -75,6 +78,7 @@ export default function Services() {
   const head = useReveal();
   const grid = useReveal();
   const bridge = useReveal();
+  const [open, setOpen] = useState(null);
 
   return (
     <section id="servicios" className="py-20 sm:py-28 lg:py-32">
@@ -91,7 +95,7 @@ export default function Services() {
 
         <div ref={grid} className="rv grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5">
           {CARDS.map((c) => (
-            <ServiceCard key={c.n} c={c} t={t} />
+            <ServiceCard key={c.n} c={c} t={t} onOpen={() => setOpen(c.t)} />
           ))}
         </div>
 
@@ -107,6 +111,7 @@ export default function Services() {
           </span>
         </p>
       </div>
+      {open && <ProjectModal p={{ k: open }} onClose={() => setOpen(null)} />}
     </section>
   );
 }
