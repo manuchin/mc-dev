@@ -19,7 +19,7 @@ export default function App() {
           style={{ transform: "rotate(90deg) translateX(-50%)", transformOrigin: "right top" }}
           aria-hidden="true"
         >
-          MC · CÓRDOBA ARG · 31.4°S 64.1°O
+          MC · CÓRDOBA, ARGENTINA
         </p>
         <Header />
         <main id="top" className="relative">

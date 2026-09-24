@@ -18,10 +18,10 @@ function Mockup({ variant }) {
   return (
     <div className="pointer-events-none relative mx-auto mt-2 w-full select-none" aria-hidden="true">
       {/* notebook */}
-      <div className="mx-auto w-[86%] rounded-t-md border border-border-strong bg-[#0b0d0f] p-[5px] pb-0">
+      <div className="mx-auto w-[86%] rounded-t-md border border-border-strong bg-[var(--device-frame)] p-[5px] pb-0">
         <div className="flex gap-2 px-2 py-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#2a2e31]" />
-          <span className="h-1.5 w-1.5 rounded-full bg-[#2a2e31]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[var(--mock-dot)]" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[var(--mock-dot)]" />
           <span className="h-1.5 w-1.5 rounded-full bg-primary/40" />
         </div>
         <div className="h-16 rounded-t-sm bg-card-elevated p-2">
@@ -41,9 +41,9 @@ function Mockup({ variant }) {
           )}
         </div>
       </div>
-      <div className="mx-auto h-[5px] w-[94%] rounded-b-md bg-[#15181a]" />
+      <div className="mx-auto h-[5px] w-[94%] rounded-b-md bg-[var(--mock-chrome)]" />
       {/* teléfono */}
-      <div className="absolute -bottom-3 right-[2%] w-[19%] rounded-md border border-border-strong bg-[#0b0d0f] p-[3px]">
+      <div className="absolute -bottom-3 right-[2%] w-[19%] rounded-md border border-border-strong bg-[var(--device-frame)] p-[3px]">
         <div className="h-14 rounded-[4px] bg-card-elevated p-1">
           <div className="h-1 w-2/3 rounded-full bg-primary/50" />
           <div className="mt-1 h-0.5 w-full rounded-full bg-border" />
@@ -63,7 +63,7 @@ function ProjectCard({ p, t, onOpen }) {
       type="button"
       onClick={onOpen}
       aria-haspopup="dialog"
-      className="rv group flex cursor-pointer flex-col rounded-2xl border border-border bg-card p-6 pb-7 text-left shadow-lg shadow-black/30 transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_36px_rgba(56,189,248,0.14)]"
+      className="rv group flex cursor-pointer flex-col rounded-2xl border border-border bg-card p-6 pb-7 text-left card-shadow transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_0_36px_var(--glow)]"
     >
       <div className="flex items-baseline justify-between gap-4">
         <h3 className="m-0 font-sans text-[20px] font-semibold leading-snug tracking-[-0.01em] transition-colors group-hover:text-primary">

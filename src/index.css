@@ -22,7 +22,44 @@
   --border: #1d2126;
   --border-strong: #2c333b;
   --input: #0d0f11;
+  --header-bg: rgba(10, 10, 10, 0.93);
+  --shadow-card: rgba(0, 0, 0, 0.55);
+  --mock-chrome: #15181a;
+  --device-frame: #0b0d0f;
+  --mock-dot: #2a2e31;
+  --glow: rgba(56, 189, 248, 0.14);
+  --glow-soft: rgba(56, 189, 248, 0.12);
+  --backdrop: rgba(0, 0, 0, 0.75);
   --radius: 2px;
+  color-scheme: dark;
+}
+
+/* Modo claro (opt-in): la identidad sigue siendo Belgrano,
+   con el celeste oscurecido un paso para contraste sobre blanco. */
+html.light {
+  --background: #f7f7f5;
+  --foreground: #0e1114;
+  --card: #ffffff;
+  --card-elevated: #f1f3f5;
+  --primary: #0284c7;
+  --primary-foreground: #ffffff;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #0e1114;
+  --muted: #f1f3f5;
+  --muted-foreground: #5a6472;
+  --faint: #8b959f;
+  --border: #e3e7ea;
+  --border-strong: #c9d1d8;
+  --input: #ffffff;
+  --header-bg: rgba(247, 247, 245, 0.92);
+  --shadow-card: rgba(15, 23, 42, 0.14);
+  --mock-chrome: #e6e9ec;
+  --device-frame: #ffffff;
+  --mock-dot: #c8ced4;
+  --glow: rgba(2, 132, 199, 0.12);
+  --glow-soft: rgba(2, 132, 199, 0.10);
+  --backdrop: rgba(15, 23, 42, 0.45);
+  color-scheme: light;
 }
 
 @layer base {
@@ -78,6 +115,25 @@
     opacity: 1;
     transform: none;
   }
+  /* sombras de tarjeta dependientes del tema */
+  .card-shadow {
+    box-shadow:
+      0 22px 55px -18px var(--shadow-card),
+      0 4px 12px -8px var(--shadow-card);
+  }
+  /* mockups de dispositivos (ejemplos) */
+  .mock-chrome { background: var(--mock-chrome); }
+  .device-frame { background: var(--device-frame); }
+  /* halo del hero (más suave en modo claro) */
+  .hero-glow { opacity: 0.2; }
+}
+
+/* la retícula técnica casi desaparece en blanco: se compensa */
+html.light .grid-bg {
+  opacity: 0.45;
+}
+html.light .hero-glow {
+  opacity: 0.1;
 }
 
 @media (prefers-reduced-motion: reduce) {

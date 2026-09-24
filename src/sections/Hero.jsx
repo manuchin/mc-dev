@@ -20,12 +20,20 @@ export default function Hero() {
       {/* mancha de luz celeste centrada detrás del hero */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[720px] max-w-[92vw] -translate-x-1/2 rounded-full opacity-20 blur-[110px]"
-        style={{ background: "radial-gradient(closest-side, #38bdf8, transparent)" }}
+        className="hero-glow pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[720px] max-w-[92vw] -translate-x-1/2 rounded-full opacity-20 blur-[110px]"
+        style={{ background: "radial-gradient(closest-side, var(--primary), transparent)" }}
       />
 
       <div className="relative mx-auto max-w-[1240px] px-5 sm:px-8 lg:px-14">
         <div className="pt-20 text-center sm:pt-28 lg:pt-32">
+          {/* monograma circular: humaniza como un avatar sin necesitar foto */}
+          <div
+            aria-hidden="true"
+            className="rv mx-auto mb-7 flex h-14 w-14 select-none items-center justify-center rounded-full border border-border-strong bg-card font-sans text-[22px] font-semibold text-primary card-shadow"
+          >
+            MC
+          </div>
+
           <p ref={kicker} className="rv font-mono text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
             <b className="font-semibold text-primary">Manuel Candoli</b>
             {t("hero.kicker")}
@@ -56,7 +64,7 @@ export default function Hero() {
             <Button asChild>
               <a href="#contacto">
                 {t("hero.cta1")}{" "}
-                <span aria-hidden="true" className="ml-1 inline-block tracking-normal text-sky-200 transition-transform duration-200 group-hover:translate-x-0.5">
+                <span aria-hidden="true" className="ml-1 inline-block tracking-normal opacity-80 transition-transform duration-200 group-hover:translate-x-0.5">
                   →
                 </span>
               </a>
@@ -69,14 +77,14 @@ export default function Hero() {
           {/* Mini-historia: cómo arranca un proyecto (en vez de comandos que nadie entiende) */}
           <div ref={term} className="rv mx-auto mt-14 max-w-2xl sm:mt-16">
             <div
-              className="relative rounded-2xl bg-card px-5 py-4 text-left shadow-xl shadow-black/40
+              className="relative rounded-2xl bg-card px-5 py-4 text-left card-shadow
                          before:pointer-events-none before:absolute before:-inset-x-5 before:-bottom-5 before:border-b
                          before:[border-image:linear-gradient(to_right,transparent,rgba(148,163,184,0.35),transparent)1]"
             >
               <div className="mb-3 flex items-center justify-between">
                 <span className="flex gap-1.5" aria-hidden="true">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#2a2e31]" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#2a2e31]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[var(--mock-dot)]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[var(--mock-dot)]" />
                   <span className="h-2.5 w-2.5 rounded-full bg-primary/50" />
                 </span>
                 <span className="font-mono text-[11px] text-faint">{t("hero.term.cap")}</span>

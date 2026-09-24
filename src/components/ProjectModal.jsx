@@ -63,14 +63,14 @@ export default function ProjectModal({ p, onClose }) {
 
   return (
     <div
-      className="modal-backdrop fixed inset-0 z-40 flex items-end justify-center bg-black/75 p-4 backdrop-blur-sm sm:items-center"
+      className="modal-backdrop fixed inset-0 z-40 flex items-end justify-center bg-[var(--backdrop)] p-4 backdrop-blur-sm sm:items-center"
       onClick={onClose}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="pm-title"
-        className="modal-card relative w-full max-w-[560px] rounded-2xl border border-border-strong bg-card p-6 shadow-2xl shadow-black/60 sm:p-8"
+        className="modal-card relative w-full max-w-[560px] rounded-2xl border border-border-strong bg-card p-6 card-shadow sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -97,7 +97,7 @@ export default function ProjectModal({ p, onClose }) {
           value={reply}
           onChange={(e) => setReply(e.target.value)}
           placeholder={t("form.replyPh")}
-          className="mt-2 w-full rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base text-foreground outline-none transition-all placeholder:text-faint focus:border-primary focus:shadow-[0_0_20px_rgba(56,189,248,0.12)]"
+          className="mt-2 w-full rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base text-foreground outline-none transition-all placeholder:text-faint focus:border-primary focus:shadow-[0_0_20px_var(--glow-soft)]"
         />
 
         <label htmlFor="pm-msg" className="mt-4 block font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
@@ -110,7 +110,7 @@ export default function ProjectModal({ p, onClose }) {
           maxLength={2000}
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
-          className="mt-2 w-full resize-y rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base leading-relaxed text-foreground outline-none transition-all focus:border-primary focus:shadow-[0_0_20px_rgba(56,189,248,0.12)]"
+          className="mt-2 w-full resize-y rounded-lg border border-border-strong bg-card-elevated px-4 py-3.5 text-base leading-relaxed text-foreground outline-none transition-all focus:border-primary focus:shadow-[0_0_20px_var(--glow-soft)]"
         />
 
         <div className="mt-4 flex flex-wrap gap-3">

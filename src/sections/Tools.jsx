@@ -46,7 +46,7 @@ export default function Tools() {
         <div className="mt-10 grid items-start gap-10 sm:gap-[clamp(30px,5vw,80px)] lg:grid-cols-[1.2fr_1fr]">
           {/* Columna izquierda: título serif italic sky-400 + bajada sans limpia */}
           <div ref={pitch} className="rv max-w-[52ch]">
-            <h3 className="m-0 font-serif text-[clamp(22px,2.8vw,34px)] font-normal italic leading-snug text-sky-400">
+            <h3 className="m-0 font-serif text-[clamp(22px,2.8vw,34px)] font-normal italic leading-snug text-primary">
               {t("tools.q")}
             </h3>
             <p className="mt-4 text-[17px] leading-relaxed text-foreground">{t("tools.a")}</p>
