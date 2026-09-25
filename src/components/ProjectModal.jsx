@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "../i18n.jsx";
 import { useToast } from "./ToastProvider.jsx";
+import { saveMessage } from "../lib/feedback.js";
 import { Button } from "./ui/button.jsx";
 
 const WA = "5493513805496";
@@ -43,15 +44,7 @@ export default function ProjectModal({ p, onClose }) {
     if (!msg.trim()) return;
     setSending(true);
     try {
-      const res = await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reply: reply.trim(), message: msg.trim(), lang }),
-      });
-      const ct = res.headers.get("content-type") || "";
-      if (!res.ok || ct.indexOf("application/json") === -1) throw new Error("no api");
-      const data = await res.json();
-      if (!data || data.ok !== true) throw new Error("bad payload");
+      await saveMessage({ reply: reply.trim(), message: msg.trim(), lang });
       toast(t(reply.trim() ? "toast.saved" : "form.noReply"));
       onClose();
     } catch (err) {
@@ -125,6 +118,8 @@ export default function ProjectModal({ p, onClose }) {
           </Button>
         </div>
         <p className="m-0 mt-3 font-mono text-[11px] tracking-[0.1em] text-faint">{t("form.hint")}</p>
+        {/* Honeypot anti-spam: invisible para personas, los bots lo llenan. */}
+        <input id="hp-field" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0" />
       </div>
     </div>
   );

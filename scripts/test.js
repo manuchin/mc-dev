@@ -57,6 +57,7 @@ const i18nSrc = fs.readFileSync(path.join(ROOT, "src", "i18n.js"), "utf8");
 const contactSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Contact.jsx"), "utf8");
 const projectsSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Projects.jsx"), "utf8");
 const modalSrc = fs.readFileSync(path.join(ROOT, "src", "components", "ProjectModal.jsx"), "utf8");
+const feedbackLibSrc = fs.readFileSync(path.join(ROOT, "src", "lib", "feedback.js"), "utf8");
 const headerSrc = fs.readFileSync(path.join(ROOT, "src", "sections", "Header.jsx"), "utf8");
 const i18nProviderSrc = fs.readFileSync(path.join(ROOT, "src", "i18n.jsx"), "utf8");
 
@@ -68,7 +69,7 @@ ok("persistencia del idioma (localStorage)", /localStorage\.setItem\("mc-lang"/.
 ok("formulario de contacto presente", /cf-msg/.test(contactSrc));
 ok("campo de contacto para responder (cf-reply / pm-reply)", /cf-reply/.test(contactSrc) && /pm-reply/.test(modalSrc));
 ok("botón enviar por WhatsApp", /wa\.me\/" \+ WA \+ "\?text="/.test(contactSrc));
-ok("botón guardar sin WhatsApp (POST /api/feedback)", /fetch\("\/api\/feedback"/.test(contactSrc));
+ok("botón guardar sin WhatsApp (POST /api/feedback)", /postJson\("\/api\/feedback"/.test(feedbackLibSrc) && /saveMessage/.test(contactSrc));
 ok("toast avisa si no dejaron contacto", /form\.noReply/.test(contactSrc) && /form\.noReply/.test(modalSrc));
 ok("email correcto", /manuelcandoliobregon@gmail\.com/.test(contactSrc));
 ok("WhatsApp correcto", /5493513805496/.test(contactSrc));
@@ -92,7 +93,7 @@ ok("los cards de ejemplos abren pop-up", /ProjectModal/.test(projectsSrc));
 ok("los cards ya NO bajan a #contacto", !/href="#contacto"/.test(projectsSrc));
 ok("pop-up precarga el mensaje del ejemplo", /p\.k \+ "\.msg"/.test(modalSrc));
 ok("pop-up manda por WhatsApp", /wa\.me\/" \+ WA \+ "\?text="/.test(modalSrc));
-ok("pop-up también guarda sin WhatsApp", /fetch\("\/api\/feedback"/.test(modalSrc));
+ok("pop-up también guarda sin WhatsApp (vía saveMessage)", /saveMessage/.test(modalSrc));
 ok("pop-up se cierra con Esc", /Escape/.test(modalSrc));
 
 /* QUIERO UNO ASÍ de servicios: abre el mismo pop-up con la clave correcta.
@@ -108,6 +109,21 @@ ok("anti-flash de tema en index.html", /mc-theme/.test(html) && /prefers-color-s
 ok("toggle de tema en el header", /mc-theme/.test(headerSrc) && /theme\.aria/.test(headerSrc));
 ok("header usa fondo dependiente del tema", /var\(--header-bg\)/.test(headerSrc));
 ok("tokens de tema claro definidos", /html\.light/.test(fs.readFileSync(path.join(ROOT, "src", "index.css"), "utf8")));
+
+/* base de datos real: Convex + dashboard /admin + guardado unificado */
+const dbSchemaSrc = fs.readFileSync(path.join(ROOT, "convex", "schema.js"), "utf8");
+const inboxSrc = fs.readFileSync(path.join(ROOT, "convex", "inbox.js"), "utf8");
+const adminPageSrc = fs.readFileSync(path.join(ROOT, "src", "pages", "AdminPage.jsx"), "utf8");
+const viteCfgSrc = fs.readFileSync(path.join(ROOT, "vite.config.mjs"), "utf8");
+const adminHtmlSrc = fs.readFileSync(path.join(ROOT, "admin.html"), "utf8");
+ok("schema de Convex guarda mensajes con estado respondido", /answered/.test(dbSchemaSrc));
+ok("bandeja de Convex exige clave de admin", /adminKey/.test(inboxSrc) && /ADMIN_TOKEN/.test(inboxSrc));
+ok("guardado unificado (Contact y pop-up usan saveMessage)", /saveMessage/.test(contactSrc) && /saveMessage/.test(modalSrc) && /export async function saveMessage/.test(feedbackLibSrc));
+ok("guardado con cadena de fallback honesta (Convex → local)", /VITE_CONVEX_URL/.test(feedbackLibSrc) && /api\/feedback/.test(feedbackLibSrc));
+ok("honeypot anti-spam en formulario y pop-up", (contactSrc + modalSrc).split("hp-field").length - 1 >= 2);
+ok("dashboard /admin conecta con la base (useQuery + api.inbox)", /useQuery/.test(adminPageSrc) && /api\.inbox/.test(adminPageSrc));
+ok("admin.html noindex", /noindex/.test(adminHtmlSrc));
+ok("build incluye admin.html como entrada", /admin/.test(viteCfgSrc) && /input/.test(viteCfgSrc));
 
 /* ---------- 3. paridad i18n ---------- */
 section("3. Paridad de claves i18n");
@@ -170,13 +186,13 @@ if (fs.existsSync(path.join(ROOT, "dist/index.html"))) {
   if (fs.existsSync(assetsDir)) {
     const assets = fs.readdirSync(assetsDir);
     ok("dist tiene CSS con Tailwind", assets.some((a) => a.endsWith(".css")));
-    ok("dist tiene bundle JS", assets.some((a) => a.endsWith(".js")));
-    const jsFile = assets.find((a) => a.endsWith(".js"));
-    if (jsFile) {
-      const js = fs.readFileSync(path.join(assetsDir, jsFile), "utf8");
-      ok("bundle incluye diccionarios i18n", js.includes("Construyo") && js.includes("Construo"));
-      ok("bundle incluye email y WhatsApp", js.includes("manuelcandoliobregon@gmail.com") && js.includes("5493513805496"));
-    }
+    ok("dist tiene bundle JS", assets.some((a) => a.endsWith(".js")));      const jsAll = assets
+        .filter((a) => a.endsWith(".js"))
+        .map((a) => fs.readFileSync(path.join(assetsDir, a), "utf8"))
+        .join("\n");
+      ok("bundle incluye diccionarios i18n", jsAll.includes("Construyo") && jsAll.includes("Construo"));
+      ok("bundle incluye email y WhatsApp", jsAll.includes("manuelcandoliobregon@gmail.com") && jsAll.includes("5493513805496"));
+      ok("bundle del dashboard /admin incluido en dist", assets.some((a) => a.startsWith("admin") && a.endsWith(".js")));
   }
 } else {
   console.log("  – dist/ no existe todavía (se genera en el deploy)");

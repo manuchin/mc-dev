@@ -4,9 +4,12 @@
 
    - Sirve dist/ (build de Vite) si existe; si no, el index.html raíz.
      En Termux alcanza con git pull + node server.js: dist/ está versionado.
-   - POST /api/feedback   → guarda mensajes de visitantes (data/feedback.json)
+   - POST /api/feedback   → guarda mensajes de visitantes (base real en
+     Convex si está configurada; si no, data/feedback.json)
    - GET  /api/feedback   → lista los mensajes (SOLO desde localhost)
    - GET  /bandeja        → bandeja legible (SOLO desde localhost)
+   - GET  /admin          → dashboard completo (base real Convex en vivo,
+                            responder, marcar, borrar, CSV)
    - GET  /api/health     → check rápido para scripts
 
    Blindaje (probado en scripts/test.js):
@@ -337,6 +340,13 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "GET" && urlPath === "/api/health") {
     json(res, 200, { ok: true });
+    return;
+  }
+
+  /* Dashboard /admin (bandeja con base real): en dist/ queda admin.html. */
+  if (urlPath === "/admin") {
+    res.writeHead(302, Object.assign({ Location: "/admin.html" }, SEC));
+    res.end();
     return;
   }
 
