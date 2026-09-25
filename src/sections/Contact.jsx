@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useI18n } from "../i18n.jsx";
 import { useReveal } from "../hooks/use-reveal.js";
 import { useToast } from "../components/ToastProvider.jsx";
+import { saveMessage } from "../lib/feedback.js";
 import { Button } from "../components/ui/button.jsx";
 
 const EMAIL = "manuelcandoliobregon@gmail.com";
@@ -34,17 +35,14 @@ export default function Contact() {
     if (!msg.trim()) return;
     setSending(true);
     try {
-      const res = await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), reply: reply.trim(), message: msg.trim(), lang }),
+      /* Base de datos real (Convex) o fallback local — la UI no cambia:
+         lo decide saveMessage según el entorno. */
+      await saveMessage({
+        name: name.trim(),
+        reply: reply.trim(),
+        message: msg.trim(),
+        lang,
       });
-      /* Validamos que la respuesta sea JSON del server, no un HTML de fallback:
-         en un hosting estático sin API esto cae al toast de fallo honesto. */
-      const ct = res.headers.get("content-type") || "";
-      if (!res.ok || ct.indexOf("application/json") === -1) throw new Error("no api");
-      const data = await res.json();
-      if (!data || data.ok !== true) throw new Error("bad payload");
       toast(t(reply.trim() ? "toast.saved" : "form.noReply"));
       setMsg("");
     } catch (err) {
@@ -155,6 +153,8 @@ export default function Contact() {
             </Button>
           </div>
           <p className="m-0 mt-0.5 font-mono text-[11px] tracking-[0.1em] text-faint">{t("form.hint")}</p>
+          {/* Honeypot anti-spam: invisible para personas, los bots lo llenan. */}
+          <input id="hp-field" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" className="pointer-events-none absolute -left-[9999px] h-0 w-0 opacity-0" />
         </form>
         </div>
 
